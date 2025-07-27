@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/di/injection_container.dart';
 import '../../../../core/constants/theme_constants.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../auth/domain/repositories/auth_repository.dart';
 import '../../../schedule/presentation/bloc/schedule_bloc.dart';
 
 class AIPromptInput extends StatefulWidget {
@@ -23,14 +25,22 @@ class _AIPromptInputState extends State<AIPromptInput> {
     super.dispose();
   }
 
-  void _handleSubmit() {
+  void _handleSubmit() async {
     final prompt = _controller.text.trim();
     if (prompt.isNotEmpty) {
       final authState = context.read<AuthBloc>().state;
       String? authToken;
 
       if (authState is AuthAuthenticated) {
-        authToken = 'Bearer token_here'; // Get actual token
+        final tokenResult = await getIt<AuthRepository>().getAuthToken();
+        tokenResult.fold(
+          (failure) => null,
+          (token) {
+            if (token != null) {
+              authToken = 'Bearer $token';
+            }
+          },
+        );
       }
 
       context.read<ScheduleBloc>().add(

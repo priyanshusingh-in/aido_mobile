@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/di/injection_container.dart';
 import '../../../../core/constants/theme_constants.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../auth/domain/repositories/auth_repository.dart';
 import '../bloc/schedule_bloc.dart';
 import '../widgets/schedule_card.dart';
 import '../widgets/schedule_filter_bar.dart';
@@ -33,16 +35,24 @@ class _ScheduleListScreenState extends State<ScheduleListScreen>
     super.dispose();
   }
 
-  void _loadSchedules() {
+  void _loadSchedules() async {
     final authState = context.read<AuthBloc>().state;
     if (authState is AuthAuthenticated) {
-      context.read<ScheduleBloc>().add(
-            GetSchedulesRequested(
-              authToken: 'Bearer token_here',
-              type: _selectedType,
-              priority: _selectedPriority,
-            ),
-          );
+      final tokenResult = await getIt<AuthRepository>().getAuthToken();
+      tokenResult.fold(
+        (failure) => null,
+        (token) {
+          if (token != null) {
+            context.read<ScheduleBloc>().add(
+                  GetSchedulesRequested(
+                    authToken: 'Bearer $token',
+                    type: _selectedType,
+                    priority: _selectedPriority,
+                  ),
+                );
+          }
+        },
+      );
     }
   }
 
@@ -147,8 +157,25 @@ class _ScheduleListScreenState extends State<ScheduleListScreen>
                     onEdit: () {
                       // TODO: Navigate to edit schedule
                     },
-                    onDelete: () {
-                      _showDeleteConfirmation(schedule.id!);
+                    onDelete: () async {
+                      final authState = context.read<AuthBloc>().state;
+                      if (authState is AuthAuthenticated) {
+                        final tokenResult =
+                            await getIt<AuthRepository>().getAuthToken();
+                        tokenResult.fold(
+                          (failure) => null,
+                          (token) {
+                            if (token != null) {
+                              context.read<ScheduleBloc>().add(
+                                    DeleteScheduleRequested(
+                                      id: schedule.id!,
+                                      authToken: 'Bearer $token',
+                                    ),
+                                  );
+                            }
+                          },
+                        );
+                      }
                     },
                   ),
                 );
@@ -268,16 +295,25 @@ class _ScheduleListScreenState extends State<ScheduleListScreen>
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () {
+            onPressed: () async {
               Navigator.of(context).pop();
               final authState = context.read<AuthBloc>().state;
               if (authState is AuthAuthenticated) {
-                context.read<ScheduleBloc>().add(
-                      DeleteScheduleRequested(
-                        id: scheduleId,
-                        authToken: 'Bearer token_here',
-                      ),
-                    );
+                final tokenResult =
+                    await getIt<AuthRepository>().getAuthToken();
+                tokenResult.fold(
+                  (failure) => null,
+                  (token) {
+                    if (token != null) {
+                      context.read<ScheduleBloc>().add(
+                            DeleteScheduleRequested(
+                              id: scheduleId,
+                              authToken: 'Bearer $token',
+                            ),
+                          );
+                    }
+                  },
+                );
               }
             },
             style: TextButton.styleFrom(

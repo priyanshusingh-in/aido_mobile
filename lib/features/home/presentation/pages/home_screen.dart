@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/di/injection_container.dart';
 import '../../../../core/constants/theme_constants.dart';
 import '../../../../core/utils/date_utils.dart' as date_utils;
 import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../auth/domain/repositories/auth_repository.dart';
 import '../../../schedule/presentation/bloc/schedule_bloc.dart';
 import '../widgets/ai_prompt_input.dart';
 import '../widgets/recent_schedules_section.dart';
@@ -23,12 +25,20 @@ class _HomeScreenState extends State<HomeScreen> {
     _loadSchedules();
   }
 
-  void _loadSchedules() {
+  void _loadSchedules() async {
     final authState = context.read<AuthBloc>().state;
     if (authState is AuthAuthenticated) {
-      context.read<ScheduleBloc>().add(
-            const GetSchedulesRequested(authToken: 'Bearer token_here'),
-          );
+      final tokenResult = await getIt<AuthRepository>().getAuthToken();
+      tokenResult.fold(
+        (failure) => null,
+        (token) {
+          if (token != null) {
+            context.read<ScheduleBloc>().add(
+                  GetSchedulesRequested(authToken: 'Bearer $token'),
+                );
+          }
+        },
+      );
     }
   }
 

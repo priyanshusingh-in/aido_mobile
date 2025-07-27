@@ -57,4 +57,22 @@ abstract class ApiClient {
     @Path('id') String id,
     @Header(ApiConstants.authorization) String token,
   );
+
+  // Additional schedule endpoints
+  @GET('${ApiConstants.schedules}/date-range')
+  Future<ScheduleListResponse> getSchedulesByDateRange(
+    @Query('startDate') String startDate,
+    @Query('endDate') String endDate,
+    @Header(ApiConstants.authorization) String token,
+  );
+
+  @GET('${ApiConstants.schedules}/type/{type}')
+  Future<ScheduleListResponse> getSchedulesByType(
+    @Path('type') String type,
+    @Header(ApiConstants.authorization) String token,
+  );
+
+  // System endpoints
+  @GET('/health')
+  Future<Map<String, dynamic>> healthCheck();
 }
