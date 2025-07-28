@@ -15,11 +15,31 @@ class EnvConfig {
 
   // Initialize environment variables
   static Future<void> load() async {
-    await dotenv.load(fileName: '.env');
+    print('DEBUG: Loading .env file...');
+    try {
+      await dotenv.load(fileName: '.env');
+      print(
+          'DEBUG: .env file loaded. Available keys: ${dotenv.env.keys.toList()}');
+      print('DEBUG: ENVIRONMENT value: "${dotenv.env[_environmentKey]}"');
+    } catch (e) {
+      print('ERROR: Failed to load .env file: $e');
+      // Try alternative approach - set environment variables manually
+      dotenv.env['ENVIRONMENT'] = 'production';
+      dotenv.env['API_BASE_URL_PRODUCTION'] =
+          'https://aido-backend.onrender.com/api/v1';
+      dotenv.env['API_HEALTH_CHECK_URL'] =
+          'https://aido-backend.onrender.com/health';
+      print('DEBUG: Set environment variables manually');
+    }
   }
 
   // Environment
-  static String get environment => dotenv.env[_environmentKey] ?? 'development';
+  static String get environment {
+    final env = dotenv.env[_environmentKey];
+    // Temporary fix: force production environment
+    return 'production';
+  }
+
   static bool get isDevelopment => environment == 'development';
   static bool get isProduction => environment == 'production';
 
@@ -27,15 +47,15 @@ class EnvConfig {
   static String get apiBaseUrlDevelopment =>
       dotenv.env[_apiBaseUrlDevKey] ?? 'http://localhost:3000/api/v1';
   static String get apiBaseUrlProduction =>
-      dotenv.env[_apiBaseUrlProdKey] ??
       'https://aido-backend.onrender.com/api/v1';
   static String get apiHealthCheckUrl =>
-      dotenv.env[_apiHealthCheckKey] ??
       'https://aido-backend.onrender.com/health';
 
   // Dynamic API Base URL based on environment
-  static String get apiBaseUrl =>
-      isProduction ? apiBaseUrlProduction : apiBaseUrlDevelopment;
+  static String get apiBaseUrl {
+    final url = isProduction ? apiBaseUrlProduction : apiBaseUrlDevelopment;
+    return url;
+  }
 
   // Timeouts
   static int get apiConnectTimeout =>
