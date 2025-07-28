@@ -7,9 +7,9 @@ import '../../features/schedule/data/models/schedule_models.dart';
 
 part 'api_client.g.dart';
 
-@RestApi(baseUrl: ApiConstants.baseUrl)
+@RestApi()
 abstract class ApiClient {
-  factory ApiClient(Dio dio, {String baseUrl}) = _ApiClient;
+  factory ApiClient(Dio dio, {String? baseUrl}) = _ApiClient;
 
   // Auth endpoints
   @POST(ApiConstants.login)
@@ -32,11 +32,8 @@ abstract class ApiClient {
   @GET(ApiConstants.schedules)
   Future<ScheduleListResponse> getSchedules(
     @Header(ApiConstants.authorization) String token,
-    @Query('page') int? page,
     @Query('limit') int? limit,
-    @Query('type') String? type,
-    @Query('priority') String? priority,
-    @Query('date') String? date,
+    @Query('offset') int? offset,
   );
 
   @GET('${ApiConstants.schedules}/{id}')
@@ -74,5 +71,5 @@ abstract class ApiClient {
 
   // System endpoints
   @GET('/health')
-  Future<Map<String, dynamic>> healthCheck();
+  Future<dynamic> healthCheck();
 }

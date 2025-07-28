@@ -73,15 +73,15 @@ class RegisterRequest {
 @JsonSerializable()
 class AuthResponse {
   final bool success;
-  final String message;
-  final String? token;
-  final UserModel? user;
+  final String? message;
+  final String? error;
+  final AuthData? data;
 
   const AuthResponse({
     required this.success,
-    required this.message,
-    this.token,
-    this.user,
+    this.message,
+    this.error,
+    this.data,
   });
 
   factory AuthResponse.fromJson(Map<String, dynamic> json) =>
@@ -91,15 +91,33 @@ class AuthResponse {
 }
 
 @JsonSerializable()
+class AuthData {
+  final UserModel? user;
+  final String? token;
+
+  const AuthData({
+    this.user,
+    this.token,
+  });
+
+  factory AuthData.fromJson(Map<String, dynamic> json) =>
+      _$AuthDataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AuthDataToJson(this);
+}
+
+@JsonSerializable()
 class UserResponse {
   final bool success;
-  final String message;
-  final UserModel? user;
+  final String? message;
+  final String? error;
+  final UserModel? data;
 
   const UserResponse({
     required this.success,
-    required this.message,
-    this.user,
+    this.message,
+    this.error,
+    this.data,
   });
 
   factory UserResponse.fromJson(Map<String, dynamic> json) =>

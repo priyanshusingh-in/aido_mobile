@@ -63,11 +63,8 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     final result = await getSchedulesUseCase(
       GetSchedulesParams(
         authToken: event.authToken,
-        page: event.page,
         limit: event.limit,
-        type: event.type,
-        priority: event.priority,
-        date: event.date,
+        offset: event.offset,
       ),
     );
 

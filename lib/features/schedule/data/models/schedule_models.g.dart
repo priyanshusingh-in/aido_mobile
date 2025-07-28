@@ -64,13 +64,13 @@ const _$PriorityEnumMap = {
 CreateScheduleRequest _$CreateScheduleRequestFromJson(
         Map<String, dynamic> json) =>
     CreateScheduleRequest(
-      aiPrompt: json['aiPrompt'] as String,
+      prompt: json['prompt'] as String,
     );
 
 Map<String, dynamic> _$CreateScheduleRequestToJson(
         CreateScheduleRequest instance) =>
     <String, dynamic>{
-      'aiPrompt': instance.aiPrompt,
+      'prompt': instance.prompt,
     };
 
 UpdateScheduleRequest _$UpdateScheduleRequestFromJson(
@@ -108,25 +108,28 @@ Map<String, dynamic> _$UpdateScheduleRequestToJson(
 ScheduleResponse _$ScheduleResponseFromJson(Map<String, dynamic> json) =>
     ScheduleResponse(
       success: json['success'] as bool,
-      message: json['message'] as String,
-      schedule: json['schedule'] == null
+      message: json['message'] as String?,
+      error: json['error'] as String?,
+      data: json['data'] == null
           ? null
-          : ScheduleModel.fromJson(json['schedule'] as Map<String, dynamic>),
+          : ScheduleModel.fromJson(json['data'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ScheduleResponseToJson(ScheduleResponse instance) =>
     <String, dynamic>{
       'success': instance.success,
       'message': instance.message,
-      'schedule': instance.schedule,
+      'error': instance.error,
+      'data': instance.data,
     };
 
 ScheduleListResponse _$ScheduleListResponseFromJson(
         Map<String, dynamic> json) =>
     ScheduleListResponse(
       success: json['success'] as bool,
-      message: json['message'] as String,
-      schedules: (json['schedules'] as List<dynamic>?)
+      message: json['message'] as String?,
+      error: json['error'] as String?,
+      data: (json['data'] as List<dynamic>?)
           ?.map((e) => ScheduleModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       total: (json['total'] as num?)?.toInt(),
@@ -139,7 +142,8 @@ Map<String, dynamic> _$ScheduleListResponseToJson(
     <String, dynamic>{
       'success': instance.success,
       'message': instance.message,
-      'schedules': instance.schedules,
+      'error': instance.error,
+      'data': instance.data,
       'total': instance.total,
       'page': instance.page,
       'limit': instance.limit,

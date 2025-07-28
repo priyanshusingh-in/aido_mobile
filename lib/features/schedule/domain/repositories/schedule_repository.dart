@@ -11,11 +11,8 @@ abstract class ScheduleRepository {
 
   Future<Either<Failure, List<Schedule>>> getSchedules({
     String? authToken,
-    int? page,
     int? limit,
-    String? type,
-    String? priority,
-    String? date,
+    int? offset,
   });
 
   Future<Either<Failure, Schedule>> getSchedule({

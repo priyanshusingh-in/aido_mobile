@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'core/config/env_config.dart';
 import 'core/di/injection_container.dart';
 import 'core/constants/theme_constants.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
@@ -11,6 +12,21 @@ import 'features/auth/presentation/pages/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Load environment configuration
+  await EnvConfig.load();
+
+  // Validate environment configuration
+  try {
+    EnvConfig.validate();
+    print('✅ Environment configuration loaded successfully');
+    print('Environment: ${EnvConfig.environment}');
+    print('API Base URL: ${EnvConfig.apiBaseUrl}');
+  } catch (e) {
+    print('❌ Environment configuration error: $e');
+    rethrow;
+  }
+
   await initializeDependencies();
   runApp(const AidoApp());
 }
@@ -30,7 +46,7 @@ class AidoApp extends StatelessWidget {
       child: BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, settingsState) {
           return MaterialApp(
-            title: 'AIdo',
+            title: EnvConfig.appName,
             debugShowCheckedModeBanner: false,
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,

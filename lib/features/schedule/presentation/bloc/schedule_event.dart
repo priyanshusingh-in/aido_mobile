@@ -22,23 +22,17 @@ class CreateScheduleRequested extends ScheduleEvent {
 
 class GetSchedulesRequested extends ScheduleEvent {
   final String? authToken;
-  final int? page;
   final int? limit;
-  final String? type;
-  final String? priority;
-  final String? date;
+  final int? offset;
 
   const GetSchedulesRequested({
     this.authToken,
-    this.page,
     this.limit,
-    this.type,
-    this.priority,
-    this.date,
+    this.offset,
   });
 
   @override
-  List<Object?> get props => [authToken, page, limit, type, priority, date];
+  List<Object?> get props => [authToken, limit, offset];
 }
 
 class UpdateScheduleRequested extends ScheduleEvent {

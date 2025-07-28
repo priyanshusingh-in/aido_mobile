@@ -31,13 +31,14 @@ class AuthRepositoryImpl implements AuthRepository {
         final response = await remoteDataSource.login(request);
 
         if (response.success &&
-            response.token != null &&
-            response.user != null) {
-          await localDataSource.saveAuthToken(response.token!);
-          await localDataSource.saveUser(response.user!);
-          return Right(response.user!);
+            response.data?.token != null &&
+            response.data?.user != null) {
+          await localDataSource.saveAuthToken(response.data!.token!);
+          await localDataSource.saveUser(response.data!.user!);
+          return Right(response.data!.user!);
         } else {
-          return Left(AuthenticationFailure(message: response.message));
+          return Left(
+              AuthenticationFailure(message: response.error ?? 'Login failed'));
         }
       } on ServerException catch (e) {
         return Left(
@@ -70,13 +71,14 @@ class AuthRepositoryImpl implements AuthRepository {
         final response = await remoteDataSource.register(request);
 
         if (response.success &&
-            response.token != null &&
-            response.user != null) {
-          await localDataSource.saveAuthToken(response.token!);
-          await localDataSource.saveUser(response.user!);
-          return Right(response.user!);
+            response.data?.token != null &&
+            response.data?.user != null) {
+          await localDataSource.saveAuthToken(response.data!.token!);
+          await localDataSource.saveUser(response.data!.user!);
+          return Right(response.data!.user!);
         } else {
-          return Left(AuthenticationFailure(message: response.message));
+          return Left(AuthenticationFailure(
+              message: response.error ?? 'Registration failed'));
         }
       } on ServerException catch (e) {
         return Left(
@@ -113,11 +115,12 @@ class AuthRepositoryImpl implements AuthRepository {
       if (await networkInfo.isConnected) {
         try {
           final response = await remoteDataSource.getUserProfile(token);
-          if (response.success && response.user != null) {
-            await localDataSource.saveUser(response.user!);
-            return Right(response.user!);
+          if (response.success && response.data != null) {
+            await localDataSource.saveUser(response.data!);
+            return Right(response.data!);
           } else {
-            return Left(ServerFailure(message: response.message));
+            return Left(ServerFailure(
+                message: response.error ?? 'Failed to get user profile'));
           }
         } on ServerException catch (e) {
           // If server fails, try to get cached user
@@ -145,8 +148,8 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, bool>> isLoggedIn() async {
     try {
-      final token = await localDataSource.getAuthToken();
-      return Right(token != null);
+      final isLoggedIn = await localDataSource.isLoggedIn();
+      return Right(isLoggedIn);
     } on CacheException catch (e) {
       return Left(CacheFailure(message: e.message));
     }

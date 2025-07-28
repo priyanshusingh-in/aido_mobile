@@ -46,8 +46,6 @@ class _ScheduleListScreenState extends State<ScheduleListScreen>
             context.read<ScheduleBloc>().add(
                   GetSchedulesRequested(
                     authToken: 'Bearer $token',
-                    type: _selectedType,
-                    priority: _selectedPriority,
                   ),
                 );
           }

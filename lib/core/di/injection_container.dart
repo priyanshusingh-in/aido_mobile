@@ -3,10 +3,12 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
+import '../constants/api_constants.dart';
 import '../network/api_client.dart';
 import '../network/dio_client.dart';
 import '../network/network_info.dart';
 import '../utils/notification_utils.dart';
+import '../utils/secure_storage_service.dart';
 
 // Auth
 import '../../features/auth/data/datasources/auth_local_data_source.dart';
@@ -51,7 +53,9 @@ Future<void> initializeDependencies() async {
   // Core
   getIt.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(getIt()));
   getIt.registerLazySingleton(() => DioClient(getIt()));
-  getIt.registerLazySingleton(() => ApiClient(getIt<DioClient>().dio));
+  getIt.registerLazySingleton(
+      () => ApiClient(getIt<DioClient>().dio, baseUrl: ApiConstants.baseUrl));
+  getIt.registerLazySingleton(() => SecureStorageService());
 
   // Initialize notifications
   await NotificationUtils.initialize();

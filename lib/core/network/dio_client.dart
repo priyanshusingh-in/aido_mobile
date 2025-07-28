@@ -5,6 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../constants/api_constants.dart';
 import '../constants/app_constants.dart';
 import '../errors/exceptions.dart';
+import 'auth_interceptor.dart';
 
 class DioClient {
   late final Dio _dio;
@@ -14,28 +15,21 @@ class DioClient {
     _dio = Dio(
       BaseOptions(
         baseUrl: ApiConstants.baseUrl,
-        connectTimeout:
-            const Duration(milliseconds: ApiConstants.connectTimeout),
-        receiveTimeout:
-            const Duration(milliseconds: ApiConstants.receiveTimeout),
-        sendTimeout: const Duration(milliseconds: ApiConstants.sendTimeout),
+        connectTimeout: Duration(milliseconds: ApiConstants.connectTimeout),
+        receiveTimeout: Duration(milliseconds: ApiConstants.receiveTimeout),
+        sendTimeout: Duration(milliseconds: ApiConstants.sendTimeout),
         headers: {
           'Content-Type': ApiConstants.contentType,
         },
       ),
     );
 
+    // Add auth interceptor
+    _dio.interceptors.add(AuthInterceptor());
+
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          // Add auth token if available
-          final token =
-              await _secureStorage.read(key: AppConstants.authTokenKey);
-          if (token != null) {
-            options.headers[ApiConstants.authorization] =
-                '${ApiConstants.bearer} $token';
-          }
-
           // Log request
           debugPrint('REQUEST[${options.method}] => PATH: ${options.path}');
           debugPrint('Headers: ${options.headers}');

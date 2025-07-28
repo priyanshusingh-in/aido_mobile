@@ -54,10 +54,10 @@ class ScheduleModel extends Schedule {
 
 @JsonSerializable()
 class CreateScheduleRequest {
-  final String aiPrompt;
+  final String prompt;
 
   const CreateScheduleRequest({
-    required this.aiPrompt,
+    required this.prompt,
   });
 
   factory CreateScheduleRequest.fromJson(Map<String, dynamic> json) =>
@@ -116,13 +116,15 @@ class UpdateScheduleRequest {
 @JsonSerializable()
 class ScheduleResponse {
   final bool success;
-  final String message;
-  final ScheduleModel? schedule;
+  final String? message;
+  final String? error;
+  final ScheduleModel? data;
 
   const ScheduleResponse({
     required this.success,
-    required this.message,
-    this.schedule,
+    this.message,
+    this.error,
+    this.data,
   });
 
   factory ScheduleResponse.fromJson(Map<String, dynamic> json) =>
@@ -134,16 +136,18 @@ class ScheduleResponse {
 @JsonSerializable()
 class ScheduleListResponse {
   final bool success;
-  final String message;
-  final List<ScheduleModel>? schedules;
+  final String? message;
+  final String? error;
+  final List<ScheduleModel>? data;
   final int? total;
   final int? page;
   final int? limit;
 
   const ScheduleListResponse({
     required this.success,
-    required this.message,
-    this.schedules,
+    this.message,
+    this.error,
+    this.data,
     this.total,
     this.page,
     this.limit,

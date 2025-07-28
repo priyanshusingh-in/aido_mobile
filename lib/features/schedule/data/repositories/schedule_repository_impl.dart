@@ -27,16 +27,17 @@ class ScheduleRepositoryImpl implements ScheduleRepository {
   }) async {
     if (await networkInfo.isConnected) {
       try {
-        final request = CreateScheduleRequest(aiPrompt: aiPrompt);
+        final request = CreateScheduleRequest(prompt: aiPrompt);
         final response =
             await remoteDataSource.createSchedule(request, authToken);
 
-        if (response.success && response.schedule != null) {
+        if (response.success && response.data != null) {
           // Cache the created schedule
-          await localDataSource.cacheSchedule(response.schedule!);
-          return Right(response.schedule!);
+          await localDataSource.cacheSchedule(response.data!);
+          return Right(response.data!);
         } else {
-          return Left(ServerFailure(message: response.message));
+          return Left(ServerFailure(
+              message: response.error ?? 'Failed to create schedule'));
         }
       } on ServerException catch (e) {
         return Left(
@@ -54,29 +55,24 @@ class ScheduleRepositoryImpl implements ScheduleRepository {
   @override
   Future<Either<Failure, List<Schedule>>> getSchedules({
     String? authToken,
-    int? page,
     int? limit,
-    String? type,
-    String? priority,
-    String? date,
+    int? offset,
   }) async {
     if (await networkInfo.isConnected) {
       try {
         final response = await remoteDataSource.getSchedules(
           authToken: authToken,
-          page: page,
           limit: limit,
-          type: type,
-          priority: priority,
-          date: date,
+          offset: offset,
         );
 
-        if (response.success && response.schedules != null) {
+        if (response.success && response.data != null) {
           // Cache the schedules
-          await localDataSource.cacheSchedules(response.schedules!);
-          return Right(response.schedules!);
+          await localDataSource.cacheSchedules(response.data!);
+          return Right(response.data!);
         } else {
-          return Left(ServerFailure(message: response.message));
+          return Left(ServerFailure(
+              message: response.error ?? 'Failed to get schedules'));
         }
       } on ServerException catch (e) {
         // If server fails, try to get cached schedules
@@ -112,11 +108,12 @@ class ScheduleRepositoryImpl implements ScheduleRepository {
       try {
         final response = await remoteDataSource.getSchedule(id, authToken);
 
-        if (response.success && response.schedule != null) {
-          await localDataSource.cacheSchedule(response.schedule!);
-          return Right(response.schedule!);
+        if (response.success && response.data != null) {
+          await localDataSource.cacheSchedule(response.data!);
+          return Right(response.data!);
         } else {
-          return Left(ServerFailure(message: response.message));
+          return Left(ServerFailure(
+              message: response.error ?? 'Failed to get schedule'));
         }
       } on ServerException catch (e) {
         // Try to get cached schedule
@@ -158,11 +155,12 @@ class ScheduleRepositoryImpl implements ScheduleRepository {
         final response =
             await remoteDataSource.updateSchedule(id, request, authToken);
 
-        if (response.success && response.schedule != null) {
-          await localDataSource.cacheSchedule(response.schedule!);
-          return Right(response.schedule!);
+        if (response.success && response.data != null) {
+          await localDataSource.cacheSchedule(response.data!);
+          return Right(response.data!);
         } else {
-          return Left(ServerFailure(message: response.message));
+          return Left(ServerFailure(
+              message: response.error ?? 'Failed to update schedule'));
         }
       } on ServerException catch (e) {
         return Left(

@@ -55,32 +55,46 @@ Map<String, dynamic> _$RegisterRequestToJson(RegisterRequest instance) =>
 
 AuthResponse _$AuthResponseFromJson(Map<String, dynamic> json) => AuthResponse(
       success: json['success'] as bool,
-      message: json['message'] as String,
-      token: json['token'] as String?,
-      user: json['user'] == null
+      message: json['message'] as String?,
+      error: json['error'] as String?,
+      data: json['data'] == null
           ? null
-          : UserModel.fromJson(json['user'] as Map<String, dynamic>),
+          : AuthData.fromJson(json['data'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$AuthResponseToJson(AuthResponse instance) =>
     <String, dynamic>{
       'success': instance.success,
       'message': instance.message,
-      'token': instance.token,
+      'error': instance.error,
+      'data': instance.data,
+    };
+
+AuthData _$AuthDataFromJson(Map<String, dynamic> json) => AuthData(
+      user: json['user'] == null
+          ? null
+          : UserModel.fromJson(json['user'] as Map<String, dynamic>),
+      token: json['token'] as String?,
+    );
+
+Map<String, dynamic> _$AuthDataToJson(AuthData instance) => <String, dynamic>{
       'user': instance.user,
+      'token': instance.token,
     };
 
 UserResponse _$UserResponseFromJson(Map<String, dynamic> json) => UserResponse(
       success: json['success'] as bool,
-      message: json['message'] as String,
-      user: json['user'] == null
+      message: json['message'] as String?,
+      error: json['error'] as String?,
+      data: json['data'] == null
           ? null
-          : UserModel.fromJson(json['user'] as Map<String, dynamic>),
+          : UserModel.fromJson(json['data'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$UserResponseToJson(UserResponse instance) =>
     <String, dynamic>{
       'success': instance.success,
       'message': instance.message,
-      'user': instance.user,
+      'error': instance.error,
+      'data': instance.data,
     };
