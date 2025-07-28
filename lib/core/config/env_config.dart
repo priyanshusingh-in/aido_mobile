@@ -35,7 +35,6 @@ class EnvConfig {
 
   // Environment
   static String get environment {
-    final env = dotenv.env[_environmentKey];
     // Temporary fix: force production environment
     return 'production';
   }

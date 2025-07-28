@@ -64,6 +64,10 @@ class _AIPromptInputState extends State<AIPromptInput> {
             SnackBar(
               content: Text('Schedule created: ${state.schedule.title}'),
               backgroundColor: AppColors.success,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppBorderRadius.medium),
+              ),
             ),
           );
         } else if (state is ScheduleError) {
@@ -71,6 +75,10 @@ class _AIPromptInputState extends State<AIPromptInput> {
             SnackBar(
               content: Text(state.message),
               backgroundColor: AppColors.error,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppBorderRadius.medium),
+              ),
             ),
           );
         }
@@ -78,67 +86,93 @@ class _AIPromptInputState extends State<AIPromptInput> {
       child: Container(
         decoration: BoxDecoration(
           gradient: AppColors.primaryGradient,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.primary.withValues(alpha: 0.3),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
-            ),
-          ],
+          borderRadius: BorderRadius.circular(AppBorderRadius.xlarge),
+          boxShadow: AppShadows.large,
         ),
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'AI Scheduling Assistant',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(AppSpacing.sm),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(AppBorderRadius.round),
+                  ),
+                  child: const Icon(
+                    Icons.auto_awesome,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'AI Scheduling Assistant',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: -0.2,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.xs),
+                      const Text(
+                        'Tell me what you want to schedule',
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 8),
-            const Text(
-              'Tell me what you want to schedule',
-              style: TextStyle(
-                color: Colors.white70,
-                fontSize: 14,
-              ),
-            ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.lg),
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppBorderRadius.medium),
+                boxShadow: AppShadows.small,
               ),
               child: TextField(
                 controller: _controller,
                 focusNode: _focusNode,
                 maxLines: 3,
                 minLines: 1,
-                decoration: const InputDecoration(
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: AppColors.textPrimary,
+                ),
+                decoration: InputDecoration(
                   hintText: 'e.g., "Meeting with John tomorrow at 3 PM"',
+                  hintStyle: AppTextStyles.bodyMedium.copyWith(
+                    color: AppColors.textTertiary,
+                  ),
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.all(16),
+                  contentPadding: const EdgeInsets.all(AppSpacing.md),
                 ),
                 onSubmitted: (_) => _handleSubmit(),
               ),
             ),
-            const SizedBox(height: 16),
-            Row(
+            const SizedBox(height: AppSpacing.lg),
+            Wrap(
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.sm,
               children: [
-                Expanded(
-                  child: _buildExampleChip('Team meeting at 2 PM'),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: _buildExampleChip('Remind me to call mom'),
-                ),
+                _buildExampleChip('Team meeting at 2 PM'),
+                _buildExampleChip('Remind me to call mom'),
+                _buildExampleChip('Dentist appointment'),
+                _buildExampleChip('Weekly standup'),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.lg),
             BlocBuilder<ScheduleBloc, ScheduleState>(
               builder: (context, state) {
                 return SizedBox(
@@ -148,9 +182,12 @@ class _AIPromptInputState extends State<AIPromptInput> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       foregroundColor: AppColors.primary,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      elevation: 0,
+                      padding:
+                          const EdgeInsets.symmetric(vertical: AppSpacing.md),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius:
+                            BorderRadius.circular(AppBorderRadius.medium),
                       ),
                     ),
                     child: state is ScheduleCreating
@@ -163,12 +200,21 @@ class _AIPromptInputState extends State<AIPromptInput> {
                                   AppColors.primary),
                             ),
                           )
-                        : const Text(
-                            'Create Schedule',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.schedule,
+                                size: 18,
+                              ),
+                              const SizedBox(width: AppSpacing.sm),
+                              Text(
+                                'Create Schedule',
+                                style: AppTextStyles.buttonMedium.copyWith(
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                            ],
                           ),
                   ),
                 );
@@ -186,17 +232,22 @@ class _AIPromptInputState extends State<AIPromptInput> {
         _controller.text = text;
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md, vertical: AppSpacing.sm),
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.2),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
+          color: Colors.white.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(AppBorderRadius.round),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.3),
+            width: 1,
+          ),
         ),
         child: Text(
           text,
           style: const TextStyle(
             color: Colors.white,
             fontSize: 12,
+            fontWeight: FontWeight.w500,
           ),
           textAlign: TextAlign.center,
           maxLines: 1,

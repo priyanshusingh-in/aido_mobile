@@ -16,19 +16,65 @@ class RecentSchedulesSection extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              'Recent Schedules',
-              style: AppTextStyles.heading3,
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(AppSpacing.sm),
+                  decoration: BoxDecoration(
+                    color: AppColors.secondary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(AppBorderRadius.round),
+                  ),
+                  child: Icon(
+                    Icons.schedule,
+                    color: AppColors.secondary,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.md),
+                Text(
+                  'Recent Schedules',
+                  style: AppTextStyles.heading4.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
             ),
             TextButton(
               onPressed: () {
                 // TODO: Navigate to full schedule list
               },
-              child: const Text('View All'),
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.primary,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md,
+                  vertical: AppSpacing.sm,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppBorderRadius.medium),
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'View All',
+                    style: AppTextStyles.label.copyWith(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.xs),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 12,
+                    color: AppColors.primary,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSpacing.lg),
         BlocBuilder<ScheduleBloc, ScheduleState>(
           builder: (context, state) {
             if (state is ScheduleLoading) {
@@ -51,7 +97,7 @@ class RecentSchedulesSection extends StatelessWidget {
               return Column(
                 children: upcomingSchedules
                     .map((schedule) => Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
+                          padding: const EdgeInsets.only(bottom: AppSpacing.md),
                           child: ScheduleCard(
                             schedule: schedule,
                             onTap: () {
@@ -77,14 +123,18 @@ class RecentSchedulesSection extends StatelessWidget {
       children: List.generate(
         3,
         (index) => Container(
-          margin: const EdgeInsets.only(bottom: 12),
-          height: 80,
+          margin: const EdgeInsets.only(bottom: AppSpacing.md),
+          height: 100,
           decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(12),
+            color: AppColors.cardBackground,
+            borderRadius: BorderRadius.circular(AppBorderRadius.large),
+            border: Border.all(color: AppColors.cardBorder),
+            boxShadow: AppShadows.small,
           ),
           child: const Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+            ),
           ),
         ),
       ),
@@ -93,31 +143,40 @@ class RecentSchedulesSection extends StatelessWidget {
 
   Widget _buildEmptyState() {
     return Container(
-      padding: const EdgeInsets.all(32),
+      padding: const EdgeInsets.all(AppSpacing.xl),
       decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
+        gradient: AppColors.cardGradient,
+        borderRadius: BorderRadius.circular(AppBorderRadius.large),
+        border: Border.all(color: AppColors.cardBorder),
+        boxShadow: AppShadows.card,
       ),
       child: Column(
         children: [
-          Icon(
-            Icons.schedule_outlined,
-            size: 48,
-            color: AppColors.textSecondary.withValues(alpha: 0.5),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'No schedules yet',
-            style: AppTextStyles.bodyLarge.copyWith(
-              color: AppColors.textSecondary,
+          Container(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(AppBorderRadius.round),
+            ),
+            child: Icon(
+              Icons.schedule_outlined,
+              size: 32,
+              color: AppColors.primary,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.lg),
+          Text(
+            'No schedules yet',
+            style: AppTextStyles.heading4.copyWith(
+              color: AppColors.textPrimary,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
           Text(
             'Use the AI assistant above to create your first schedule',
             style: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.textTertiary,
+              color: AppColors.textSecondary,
             ),
             textAlign: TextAlign.center,
           ),
@@ -128,31 +187,40 @@ class RecentSchedulesSection extends StatelessWidget {
 
   Widget _buildNoUpcomingState() {
     return Container(
-      padding: const EdgeInsets.all(32),
+      padding: const EdgeInsets.all(AppSpacing.xl),
       decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
+        gradient: AppColors.cardGradient,
+        borderRadius: BorderRadius.circular(AppBorderRadius.large),
+        border: Border.all(color: AppColors.cardBorder),
+        boxShadow: AppShadows.card,
       ),
       child: Column(
         children: [
-          Icon(
-            Icons.check_circle_outline,
-            size: 48,
-            color: AppColors.success.withValues(alpha: 0.7),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'All caught up!',
-            style: AppTextStyles.bodyLarge.copyWith(
-              color: AppColors.textSecondary,
+          Container(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            decoration: BoxDecoration(
+              color: AppColors.success.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(AppBorderRadius.round),
+            ),
+            child: Icon(
+              Icons.check_circle_outline,
+              size: 32,
+              color: AppColors.success,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.lg),
+          Text(
+            'All caught up!',
+            style: AppTextStyles.heading4.copyWith(
+              color: AppColors.textPrimary,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
           Text(
             'No upcoming schedules for now',
             style: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.textTertiary,
+              color: AppColors.textSecondary,
             ),
             textAlign: TextAlign.center,
           ),
@@ -163,27 +231,36 @@ class RecentSchedulesSection extends StatelessWidget {
 
   Widget _buildErrorState(String message) {
     return Container(
-      padding: const EdgeInsets.all(32),
+      padding: const EdgeInsets.all(AppSpacing.xl),
       decoration: BoxDecoration(
-        color: AppColors.error.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
+        color: AppColors.error.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(AppBorderRadius.large),
+        border: Border.all(color: AppColors.error.withValues(alpha: 0.2)),
+        boxShadow: AppShadows.card,
       ),
       child: Column(
         children: [
-          Icon(
-            Icons.error_outline,
-            size: 48,
-            color: AppColors.error,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Error loading schedules',
-            style: AppTextStyles.bodyLarge.copyWith(
+          Container(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            decoration: BoxDecoration(
+              color: AppColors.error.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(AppBorderRadius.round),
+            ),
+            child: Icon(
+              Icons.error_outline,
+              size: 32,
               color: AppColors.error,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.lg),
+          Text(
+            'Error loading schedules',
+            style: AppTextStyles.heading4.copyWith(
+              color: AppColors.error,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
           Text(
             message,
             style: AppTextStyles.bodyMedium.copyWith(
