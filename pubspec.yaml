@@ -90,18 +90,20 @@ flutter:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/AppIcons/android/mipmap-xxxhdpi/ic_launcher.png"
+  image_path: "assets/AppIcons/appstore.png"
   min_sdk_android: 21
   remove_alpha_ios: true
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/AppIcons/appstore.png"
   web:
     generate: true
-    image_path: "assets/AppIcons/android/mipmap-xxxhdpi/ic_launcher.png"
+    image_path: "assets/AppIcons/appstore.png"
     background_color: "#ffffff"
     theme_color: "#000000"
   windows:
     generate: true
-    image_path: "assets/AppIcons/android/mipmap-xxxhdpi/ic_launcher.png"
-    icon_size: 48
+    image_path: "assets/AppIcons/appstore.png"
+    icon_size: 256
   macos:
     generate: true
-    image_path: "assets/AppIcons/android/mipmap-xxxhdpi/ic_launcher.png"
+    image_path: "assets/AppIcons/appstore.png"
