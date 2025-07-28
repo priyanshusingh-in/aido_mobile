@@ -23,32 +23,50 @@ class EnvConfig {
       print('DEBUG: ENVIRONMENT value: "${dotenv.env[_environmentKey]}"');
     } catch (e) {
       print('ERROR: Failed to load .env file: $e');
-      // Try alternative approach - set environment variables manually
-      dotenv.env['ENVIRONMENT'] = 'production';
-      dotenv.env['API_BASE_URL_PRODUCTION'] =
-          'https://aido-backend.onrender.com/api/v1';
-      dotenv.env['API_HEALTH_CHECK_URL'] =
-          'https://aido-backend.onrender.com/health';
-      print('DEBUG: Set environment variables manually');
+      throw Exception('Failed to load environment configuration: $e');
     }
   }
 
   // Environment
   static String get environment {
-    // Temporary fix: force production environment
-    return 'production';
+    final env = dotenv.env[_environmentKey];
+    if (env == null || env.isEmpty) {
+      throw Exception(
+          'Missing required environment variable: $_environmentKey');
+    }
+    return env;
   }
 
   static bool get isDevelopment => environment == 'development';
   static bool get isProduction => environment == 'production';
 
   // API Configuration
-  static String get apiBaseUrlDevelopment =>
-      dotenv.env[_apiBaseUrlDevKey] ?? 'http://localhost:3000/api/v1';
-  static String get apiBaseUrlProduction =>
-      'https://aido-backend.onrender.com/api/v1';
-  static String get apiHealthCheckUrl =>
-      'https://aido-backend.onrender.com/health';
+  static String get apiBaseUrlDevelopment {
+    final url = dotenv.env[_apiBaseUrlDevKey];
+    if (url == null || url.isEmpty) {
+      throw Exception(
+          'Missing required environment variable: $_apiBaseUrlDevKey');
+    }
+    return url;
+  }
+
+  static String get apiBaseUrlProduction {
+    final url = dotenv.env[_apiBaseUrlProdKey];
+    if (url == null || url.isEmpty) {
+      throw Exception(
+          'Missing required environment variable: $_apiBaseUrlProdKey');
+    }
+    return url;
+  }
+
+  static String get apiHealthCheckUrl {
+    final url = dotenv.env[_apiHealthCheckKey];
+    if (url == null || url.isEmpty) {
+      throw Exception(
+          'Missing required environment variable: $_apiHealthCheckKey');
+    }
+    return url;
+  }
 
   // Dynamic API Base URL based on environment
   static String get apiBaseUrl {
@@ -57,22 +75,83 @@ class EnvConfig {
   }
 
   // Timeouts
-  static int get apiConnectTimeout =>
-      int.tryParse(dotenv.env[_apiConnectTimeoutKey] ?? '30000') ?? 30000;
-  static int get apiReceiveTimeout =>
-      int.tryParse(dotenv.env[_apiReceiveTimeoutKey] ?? '30000') ?? 30000;
-  static int get apiSendTimeout =>
-      int.tryParse(dotenv.env[_apiSendTimeoutKey] ?? '30000') ?? 30000;
+  static int get apiConnectTimeout {
+    final timeout = dotenv.env[_apiConnectTimeoutKey];
+    if (timeout == null || timeout.isEmpty) {
+      throw Exception(
+          'Missing required environment variable: $_apiConnectTimeoutKey');
+    }
+    final parsedTimeout = int.tryParse(timeout);
+    if (parsedTimeout == null) {
+      throw Exception(
+          'Invalid timeout value for $_apiConnectTimeoutKey: $timeout');
+    }
+    return parsedTimeout;
+  }
+
+  static int get apiReceiveTimeout {
+    final timeout = dotenv.env[_apiReceiveTimeoutKey];
+    if (timeout == null || timeout.isEmpty) {
+      throw Exception(
+          'Missing required environment variable: $_apiReceiveTimeoutKey');
+    }
+    final parsedTimeout = int.tryParse(timeout);
+    if (parsedTimeout == null) {
+      throw Exception(
+          'Invalid timeout value for $_apiReceiveTimeoutKey: $timeout');
+    }
+    return parsedTimeout;
+  }
+
+  static int get apiSendTimeout {
+    final timeout = dotenv.env[_apiSendTimeoutKey];
+    if (timeout == null || timeout.isEmpty) {
+      throw Exception(
+          'Missing required environment variable: $_apiSendTimeoutKey');
+    }
+    final parsedTimeout = int.tryParse(timeout);
+    if (parsedTimeout == null) {
+      throw Exception(
+          'Invalid timeout value for $_apiSendTimeoutKey: $timeout');
+    }
+    return parsedTimeout;
+  }
 
   // App Configuration
-  static String get appName => dotenv.env[_appNameKey] ?? 'AIdo Mobile';
-  static String get appVersion => dotenv.env[_appVersionKey] ?? '1.0.0';
+  static String get appName {
+    final name = dotenv.env[_appNameKey];
+    if (name == null || name.isEmpty) {
+      throw Exception('Missing required environment variable: $_appNameKey');
+    }
+    return name;
+  }
+
+  static String get appVersion {
+    final version = dotenv.env[_appVersionKey];
+    if (version == null || version.isEmpty) {
+      throw Exception('Missing required environment variable: $_appVersionKey');
+    }
+    return version;
+  }
 
   // Feature Flags
-  static bool get enableDebugLogging =>
-      dotenv.env[_enableDebugLoggingKey]?.toLowerCase() == 'true';
-  static bool get enableAnalytics =>
-      dotenv.env[_enableAnalyticsKey]?.toLowerCase() == 'true';
+  static bool get enableDebugLogging {
+    final value = dotenv.env[_enableDebugLoggingKey];
+    if (value == null || value.isEmpty) {
+      throw Exception(
+          'Missing required environment variable: $_enableDebugLoggingKey');
+    }
+    return value.toLowerCase() == 'true';
+  }
+
+  static bool get enableAnalytics {
+    final value = dotenv.env[_enableAnalyticsKey];
+    if (value == null || value.isEmpty) {
+      throw Exception(
+          'Missing required environment variable: $_enableAnalyticsKey');
+    }
+    return value.toLowerCase() == 'true';
+  }
 
   // Validation
   static bool validate() {
@@ -81,6 +160,13 @@ class EnvConfig {
       _apiBaseUrlDevKey,
       _apiBaseUrlProdKey,
       _apiHealthCheckKey,
+      _apiConnectTimeoutKey,
+      _apiReceiveTimeoutKey,
+      _apiSendTimeoutKey,
+      _appNameKey,
+      _appVersionKey,
+      _enableDebugLoggingKey,
+      _enableAnalyticsKey,
     ];
 
     for (final key in requiredKeys) {
