@@ -127,7 +127,7 @@ _Screenshots will be added here_
    # Copy environment template
    cp env.example .env
 
-   # Edit .env file with your configuration
+   # Edit .env file with your API configuration
    # See Environment Configuration section below
    ```
 
@@ -157,9 +157,9 @@ Create a `.env` file in the root directory with the following variables:
 ENVIRONMENT=development
 
 # API Configuration
-API_BASE_URL_DEVELOPMENT=http://localhost:3000/api/v1
-API_BASE_URL_PRODUCTION=https://aido-backend.onrender.com/api/v1
-API_HEALTH_CHECK_URL=https://aido-backend.onrender.com/health
+API_BASE_URL_DEVELOPMENT=your_development_api_url
+API_BASE_URL_PRODUCTION=your_production_api_url
+API_HEALTH_CHECK_URL=your_health_check_url
 
 # API Timeouts (in milliseconds)
 API_CONNECT_TIMEOUT=30000
@@ -308,10 +308,10 @@ flutter build web --release
 
 ### API Configuration
 
-The app supports multiple environments with different API endpoints:
+The app supports multiple environments with different API endpoints. Configure your API endpoints in the `.env` file:
 
-- **Development**: `http://localhost:3000/api/v1`
-- **Production**: `https://aido-backend.onrender.com/api/v1`
+- **Development**: Configure your local development server
+- **Production**: Configure your production API endpoint
 
 ### Theme Configuration
 
@@ -371,7 +371,6 @@ If you encounter any issues or have questions:
 
 ## 🔗 Links
 
-- **Backend API**: [AIdo Backend](https://aido-backend.onrender.com)
 - **Documentation**: [Flutter Docs](https://docs.flutter.dev)
 - **BLoC Documentation**: [flutter_bloc](https://bloclibrary.dev)
 
