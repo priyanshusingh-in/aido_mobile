@@ -36,40 +36,40 @@ abstract class ApiClient {
     @Query('offset') int? offset,
   );
 
-  @GET('${ApiConstants.schedules}/{id}')
+  @GET(ApiConstants.scheduleById)
   Future<ScheduleResponse> getSchedule(
     @Path('id') String id,
     @Header(ApiConstants.authorization) String token,
   );
 
-  @PUT('${ApiConstants.schedules}/{id}')
+  @PUT(ApiConstants.scheduleById)
   Future<ScheduleResponse> updateSchedule(
     @Path('id') String id,
     @Body() UpdateScheduleRequest request,
     @Header(ApiConstants.authorization) String token,
   );
 
-  @DELETE('${ApiConstants.schedules}/{id}')
+  @DELETE(ApiConstants.scheduleById)
   Future<void> deleteSchedule(
     @Path('id') String id,
     @Header(ApiConstants.authorization) String token,
   );
 
   // Additional schedule endpoints
-  @GET('${ApiConstants.schedules}/date-range')
+  @GET(ApiConstants.scheduleByDateRange)
   Future<ScheduleListResponse> getSchedulesByDateRange(
     @Query('startDate') String startDate,
     @Query('endDate') String endDate,
     @Header(ApiConstants.authorization) String token,
   );
 
-  @GET('${ApiConstants.schedules}/type/{type}')
+  @GET(ApiConstants.scheduleByType)
   Future<ScheduleListResponse> getSchedulesByType(
     @Path('type') String type,
     @Header(ApiConstants.authorization) String token,
   );
 
   // System endpoints
-  @GET('/health')
+  @GET(ApiConstants.health)
   Future<dynamic> healthCheck();
 }

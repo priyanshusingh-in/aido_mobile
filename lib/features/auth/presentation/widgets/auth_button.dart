@@ -29,7 +29,7 @@ class AuthButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppBorderRadius.medium),
           ),
-          side: const BorderSide(color: AppColors.primary, width: 1.5),
+          side: const BorderSide(color: AppColors.accentLight, width: 1.5),
         ),
         child: isLoading
             ? const SizedBox(
@@ -37,13 +37,14 @@ class AuthButton extends StatelessWidget {
                 width: 20,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(AppColors.accentLight),
                 ),
               )
             : Text(
                 text,
                 style: AppTextStyles.buttonMedium.copyWith(
-                  color: AppColors.primary,
+                  color: AppColors.accentLight,
                 ),
               ),
       );
@@ -74,12 +75,14 @@ class AuthButton extends StatelessWidget {
                 width: 20,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(AppColors.textPrimary),
                 ),
               )
             : Text(
                 text,
-                style: AppTextStyles.buttonMedium,
+                style: AppTextStyles.buttonMedium
+                    .copyWith(color: AppColors.textPrimary),
               ),
       ),
     );

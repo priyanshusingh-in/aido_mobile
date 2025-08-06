@@ -46,12 +46,8 @@ class QuickActionsSection extends StatelessWidget {
               icon: Icons.people_outline,
               title: 'Meeting',
               subtitle: 'Schedule a meeting',
-              color: AppColors.meeting,
-              gradient: const LinearGradient(
-                colors: [Color(0xFF4285F4), Color(0xFF5B9BF8)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              color: AppColors.accent,
+              gradient: AppColors.primaryGradient,
               onTap: () {
                 // TODO: Navigate to meeting creation
               },
@@ -60,12 +56,8 @@ class QuickActionsSection extends StatelessWidget {
               icon: Icons.notifications_outlined,
               title: 'Reminder',
               subtitle: 'Set a reminder',
-              color: AppColors.reminder,
-              gradient: const LinearGradient(
-                colors: [Color(0xFF34A853), Color(0xFF4CAF50)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              color: AppColors.accentLight,
+              gradient: AppColors.accentGradient,
               onTap: () {
                 // TODO: Navigate to reminder creation
               },
@@ -74,12 +66,8 @@ class QuickActionsSection extends StatelessWidget {
               icon: Icons.task_outlined,
               title: 'Task',
               subtitle: 'Add a task',
-              color: AppColors.task,
-              gradient: const LinearGradient(
-                colors: [Color(0xFFFBBC04), Color(0xFFFFD54F)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              color: AppColors.primaryDark,
+              gradient: AppColors.primaryGradient,
               onTap: () {
                 // TODO: Navigate to task creation
               },
@@ -88,12 +76,8 @@ class QuickActionsSection extends StatelessWidget {
               icon: Icons.event_outlined,
               title: 'Appointment',
               subtitle: 'Book appointment',
-              color: AppColors.appointment,
-              gradient: const LinearGradient(
-                colors: [Color(0xFFEA4335), Color(0xFFEF5350)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              color: AppColors.accent,
+              gradient: AppColors.accentGradient,
               onTap: () {
                 // TODO: Navigate to appointment creation
               },
@@ -123,10 +107,10 @@ class QuickActionsSection extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(AppSpacing.lg),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.95),
+            color: AppColors.cardBackground.withOpacity(0.95),
             borderRadius: BorderRadius.circular(AppBorderRadius.large),
             border: Border.all(
-              color: color.withValues(alpha: 0.2),
+              color: color.withOpacity(0.2),
               width: 1,
             ),
           ),
@@ -136,7 +120,7 @@ class QuickActionsSection extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(AppSpacing.sm),
                 decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.1),
+                  color: color.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(AppBorderRadius.medium),
                 ),
                 child: Icon(

@@ -70,8 +70,8 @@ class AppTheme {
         seedColor: AppColors.primary,
         brightness: Brightness.light,
         primary: AppColors.primary,
-        secondary: AppColors.secondary,
-        surface: AppColors.surface,
+        secondary: AppColors.accent,
+        surface: AppColors.backgroundSecondary,
         background: AppColors.background,
         error: AppColors.error,
       ),
@@ -145,13 +145,12 @@ class AppTheme {
         hintStyle:
             AppTextStyles.bodyMedium.copyWith(color: AppColors.textTertiary),
       ),
-      cardTheme: const CardThemeData(
+      cardTheme: CardThemeData(
         elevation: 0,
         color: AppColors.cardBackground,
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
-          borderRadius:
-              BorderRadius.all(Radius.circular(AppBorderRadius.large)),
+          borderRadius: BorderRadius.all(Radius.circular(AppBorderRadius.large)),
           side: BorderSide(color: AppColors.cardBorder),
         ),
       ),
@@ -177,33 +176,36 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: AppColors.primary,
+      colorScheme: ColorScheme(
         brightness: Brightness.dark,
-        primary: AppColors.primaryLight,
-        secondary: AppColors.secondaryLight,
-        surface: const Color(0xFF1E1E1E),
-        background: const Color(0xFF121212),
+        primary: AppColors.primary,
+        onPrimary: AppColors.textPrimary,
+        secondary: AppColors.accent,
+        onSecondary: AppColors.textPrimary,
         error: AppColors.error,
+        onError: Colors.white,
+        background: AppColors.background,
+        onBackground: AppColors.textPrimary,
+        surface: AppColors.backgroundSecondary,
+        onSurface: AppColors.textPrimary,
       ),
-      textTheme:
-          GoogleFonts.interTextTheme(ThemeData.dark().textTheme).copyWith(
-        displayLarge: AppTextStyles.heading1.copyWith(color: Colors.white),
-        displayMedium: AppTextStyles.heading2.copyWith(color: Colors.white),
-        displaySmall: AppTextStyles.heading3.copyWith(color: Colors.white),
-        headlineMedium: AppTextStyles.heading4.copyWith(color: Colors.white),
-        bodyLarge: AppTextStyles.bodyLarge.copyWith(color: Colors.white),
-        bodyMedium: AppTextStyles.bodyMedium.copyWith(color: Colors.white),
-        bodySmall: AppTextStyles.bodySmall.copyWith(color: Colors.grey[300]),
-        labelLarge: AppTextStyles.label.copyWith(color: Colors.grey[300]),
-        labelSmall: AppTextStyles.caption.copyWith(color: Colors.grey[400]),
+      textTheme: GoogleFonts.interTextTheme(ThemeData.dark().textTheme).copyWith(
+        displayLarge: AppTextStyles.heading1.copyWith(color: AppColors.textPrimary),
+        displayMedium: AppTextStyles.heading2.copyWith(color: AppColors.textPrimary),
+        displaySmall: AppTextStyles.heading3.copyWith(color: AppColors.textPrimary),
+        headlineMedium: AppTextStyles.heading4.copyWith(color: AppColors.textPrimary),
+        bodyLarge: AppTextStyles.bodyLarge.copyWith(color: AppColors.textPrimary),
+        bodyMedium: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
+        bodySmall: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+        labelLarge: AppTextStyles.label.copyWith(color: AppColors.textSecondary),
+        labelSmall: AppTextStyles.caption.copyWith(color: AppColors.textTertiary),
       ),
       appBarTheme: AppBarTheme(
         elevation: 0,
         centerTitle: true,
-        backgroundColor: const Color(0xFF121212),
-        foregroundColor: Colors.white,
-        titleTextStyle: AppTextStyles.heading4.copyWith(color: Colors.white),
+        backgroundColor: AppColors.primary,
+        foregroundColor: AppColors.textPrimary,
+        titleTextStyle: AppTextStyles.heading4.copyWith(color: AppColors.textPrimary),
         surfaceTintColor: Colors.transparent,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -214,8 +216,8 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppBorderRadius.medium),
           ),
-          backgroundColor: AppColors.primaryLight,
-          foregroundColor: Colors.white,
+          backgroundColor: AppColors.accent,
+          foregroundColor: AppColors.textPrimary,
           textStyle: AppTextStyles.buttonMedium,
         ),
       ),
@@ -226,59 +228,58 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppBorderRadius.medium),
           ),
-          side: BorderSide(color: Colors.grey[600]!),
-          foregroundColor: Colors.white,
-          textStyle: AppTextStyles.buttonMedium.copyWith(color: Colors.white),
+          side: BorderSide(color: AppColors.accentLight),
+          foregroundColor: AppColors.textPrimary,
+          textStyle: AppTextStyles.buttonMedium.copyWith(color: AppColors.textPrimary),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppBorderRadius.medium),
-          borderSide: BorderSide(color: Colors.grey[600]!),
+          borderSide: BorderSide(color: AppColors.inputBorder),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppBorderRadius.medium),
-          borderSide: BorderSide(color: Colors.grey[600]!),
+          borderSide: BorderSide(color: AppColors.inputBorder),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppBorderRadius.medium),
-          borderSide: const BorderSide(color: AppColors.primaryLight, width: 2),
+          borderSide: BorderSide(color: AppColors.inputFocusedBorder, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppBorderRadius.medium),
-          borderSide: const BorderSide(color: AppColors.error),
+          borderSide: BorderSide(color: AppColors.error),
         ),
         filled: true,
-        fillColor: const Color(0xFF1E1E1E),
+        fillColor: AppColors.inputBackground,
         contentPadding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.md, vertical: AppSpacing.sm),
-        hintStyle: AppTextStyles.bodyMedium.copyWith(color: Colors.grey[400]),
+        hintStyle: AppTextStyles.bodyMedium.copyWith(color: AppColors.textTertiary),
       ),
       cardTheme: CardThemeData(
         elevation: 0,
-        color: const Color(0xFF1E1E1E),
+        color: AppColors.cardBackground,
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppBorderRadius.large),
-          side: BorderSide(color: Colors.grey[800]!),
+          side: BorderSide(color: AppColors.cardBorder),
         ),
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: const Color(0xFF121212),
-        selectedItemColor: AppColors.primaryLight,
-        unselectedItemColor: Colors.grey[400],
+        backgroundColor: AppColors.primaryDark,
+        selectedItemColor: AppColors.accent,
+        unselectedItemColor: AppColors.textTertiary,
         selectedLabelStyle:
-            AppTextStyles.caption.copyWith(color: AppColors.primaryLight),
+            AppTextStyles.caption.copyWith(color: AppColors.accent),
         unselectedLabelStyle:
-            AppTextStyles.caption.copyWith(color: Colors.grey[400]),
+            AppTextStyles.caption.copyWith(color: AppColors.textTertiary),
         type: BottomNavigationBarType.fixed,
         elevation: 8,
       ),
-      scaffoldBackgroundColor: const Color(0xFF121212),
+      scaffoldBackgroundColor: AppColors.background,
       dividerTheme: DividerThemeData(
-        color: Colors.grey[800],
+        color: AppColors.divider,
         thickness: 1,
-        space: 1,
       ),
     );
   }

@@ -4,6 +4,39 @@ import '../../domain/entities/schedule.dart';
 
 part 'schedule_models.g.dart';
 
+// Helper functions for enum decoding
+T $enumDecode<T extends Enum>(Map<T, String> enumMap, dynamic source) {
+  if (source == null) {
+    throw ArgumentError('source is null');
+  }
+
+  if (source is String) {
+    final entry = enumMap.entries.firstWhere(
+      (entry) => entry.value == source,
+      orElse: () => throw ArgumentError('Unknown enum value: $source'),
+    );
+    return entry.key;
+  }
+
+  throw ArgumentError('source is not a string: $source');
+}
+
+T? $enumDecodeNullable<T extends Enum>(Map<T, String> enumMap, dynamic source) {
+  if (source == null) {
+    return null;
+  }
+
+  if (source is String) {
+    final entry = enumMap.entries.firstWhere(
+      (entry) => entry.value == source,
+      orElse: () => throw ArgumentError('Unknown enum value: $source'),
+    );
+    return entry.key;
+  }
+
+  throw ArgumentError('source is not a string: $source');
+}
+
 @JsonSerializable()
 class ScheduleModel extends Schedule {
   const ScheduleModel({
@@ -21,12 +54,44 @@ class ScheduleModel extends Schedule {
     super.metadata,
     super.userId,
     required super.aiPrompt,
+    required super.aiResponse,
     required super.createdAt,
     required super.updatedAt,
   });
 
-  factory ScheduleModel.fromJson(Map<String, dynamic> json) =>
-      _$ScheduleModelFromJson(json);
+  factory ScheduleModel.fromJson(Map<String, dynamic> json) {
+    // Handle nullable fields from API response with default values
+    final title = json['title'] as String? ?? 'Untitled Schedule';
+    final date = json['date'] as String? ??
+        DateTime.now().toIso8601String().split('T')[0];
+    final time = json['time'] as String? ?? '00:00';
+    final aiPrompt = json['aiPrompt'] as String? ?? '';
+    final aiResponse = json['aiResponse'] as String? ?? '';
+
+    return ScheduleModel(
+      id: json['id'] as String?,
+      type: $enumDecode(_$ScheduleTypeEnumMap, json['type']),
+      title: title,
+      description: json['description'] as String?,
+      date: date,
+      time: time,
+      duration: (json['duration'] as num?)?.toInt(),
+      participants: (json['participants'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      location: json['location'] as String?,
+      priority: $enumDecode(_$PriorityEnumMap, json['priority']),
+      category: json['category'] as String?,
+      metadata: json['metadata'] as Map<String, dynamic>?,
+      userId: json['userId'] as String?,
+      aiPrompt: aiPrompt,
+      aiResponse: aiResponse,
+      createdAt: DateTime.parse(
+          json['createdAt'] as String? ?? DateTime.now().toIso8601String()),
+      updatedAt: DateTime.parse(
+          json['updatedAt'] as String? ?? DateTime.now().toIso8601String()),
+    );
+  }
 
   Map<String, dynamic> toJson() => _$ScheduleModelToJson(this);
 
@@ -46,6 +111,7 @@ class ScheduleModel extends Schedule {
       metadata: schedule.metadata,
       userId: schedule.userId,
       aiPrompt: schedule.aiPrompt,
+      aiResponse: schedule.aiResponse,
       createdAt: schedule.createdAt,
       updatedAt: schedule.updatedAt,
     );

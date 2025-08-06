@@ -24,6 +24,7 @@ ScheduleModel _$ScheduleModelFromJson(Map<String, dynamic> json) =>
       metadata: json['metadata'] as Map<String, dynamic>?,
       userId: json['userId'] as String?,
       aiPrompt: json['aiPrompt'] as String,
+      aiResponse: json['aiResponse'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
@@ -44,6 +45,7 @@ Map<String, dynamic> _$ScheduleModelToJson(ScheduleModel instance) =>
       'metadata': instance.metadata,
       'userId': instance.userId,
       'aiPrompt': instance.aiPrompt,
+      'aiResponse': instance.aiResponse,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
     };

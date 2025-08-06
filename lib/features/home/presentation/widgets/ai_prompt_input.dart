@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/constants/theme_constants.dart';
+import '../../../../core/utils/date_utils.dart' as app_date_utils;
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/domain/repositories/auth_repository.dart';
 import '../../../schedule/presentation/bloc/schedule_bloc.dart';
@@ -60,9 +61,27 @@ class _AIPromptInputState extends State<AIPromptInput> {
     return BlocListener<ScheduleBloc, ScheduleState>(
       listener: (context, state) {
         if (state is ScheduleCreated) {
+          final schedule = state.schedule;
+          final usedRelativeTime =
+              app_date_utils.DateUtils.containsRelativeTime(schedule.aiPrompt);
+
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Schedule created: ${state.schedule.title}'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Schedule created: ${schedule.title}'),
+                  if (usedRelativeTime)
+                    Text(
+                      '⏰ Relative time detected and calculated',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.white70,
+                      ),
+                    ),
+                ],
+              ),
               backgroundColor: AppColors.success,
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
@@ -151,13 +170,42 @@ class _AIPromptInputState extends State<AIPromptInput> {
                   color: AppColors.textPrimary,
                 ),
                 decoration: InputDecoration(
-                  hintText: 'e.g., "Meeting with John tomorrow at 3 PM"',
+                  hintText:
+                      'e.g., "Meeting with John tomorrow at 3 PM" or "remind me to call mom in 2 minutes"',
                   hintStyle: AppTextStyles.bodyMedium.copyWith(
                     color: AppColors.textTertiary,
                   ),
                   border: InputBorder.none,
                   contentPadding: const EdgeInsets.all(AppSpacing.md),
+                  suffixIcon: _controller.text.isNotEmpty &&
+                          app_date_utils.DateUtils.containsRelativeTime(
+                              _controller.text)
+                      ? Container(
+                          margin: const EdgeInsets.all(AppSpacing.sm),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.sm,
+                            vertical: AppSpacing.xs,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.primary.withValues(alpha: 0.1),
+                            borderRadius:
+                                BorderRadius.circular(AppBorderRadius.small),
+                          ),
+                          child: Text(
+                            '⏰',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        )
+                      : null,
                 ),
+                onChanged: (value) {
+                  setState(() {
+                    // Trigger rebuild to show/hide relative time indicator
+                  });
+                },
                 onSubmitted: (_) => _handleSubmit(),
               ),
             ),
@@ -166,11 +214,42 @@ class _AIPromptInputState extends State<AIPromptInput> {
               spacing: AppSpacing.sm,
               runSpacing: AppSpacing.sm,
               children: [
-                _buildExampleChip('Team meeting at 2 PM'),
-                _buildExampleChip('Remind me to call mom'),
-                _buildExampleChip('Dentist appointment'),
-                _buildExampleChip('Weekly standup'),
+                ...app_date_utils.DateUtils.getRelativeTimeExamples()
+                    .take(4)
+                    .map(_buildExampleChip),
               ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Container(
+              padding: const EdgeInsets.all(AppSpacing.sm),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(AppBorderRadius.small),
+                border: Border.all(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  width: 1,
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.access_time,
+                    color: Colors.white70,
+                    size: 16,
+                  ),
+                  const SizedBox(width: AppSpacing.xs),
+                  Expanded(
+                    child: Text(
+                      '💡 Try relative time: "in 2 minutes", "in 1 hour", "in 3 days", "in 1 week"',
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: AppSpacing.lg),
             BlocBuilder<ScheduleBloc, ScheduleState>(

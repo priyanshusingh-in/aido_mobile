@@ -37,19 +37,22 @@ class AuthTextField extends StatelessWidget {
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
-        prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
+        prefixIcon: prefixIcon != null
+            ? Icon(prefixIcon, color: AppColors.textTertiary)
+            : null,
         suffixIcon: suffixIcon,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.border),
+          borderSide: const BorderSide(color: AppColors.inputBorder),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.border),
+          borderSide: const BorderSide(color: AppColors.inputBorder),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.primary, width: 2),
+          borderSide:
+              const BorderSide(color: AppColors.inputFocusedBorder, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -60,10 +63,13 @@ class AuthTextField extends StatelessWidget {
           borderSide: const BorderSide(color: AppColors.error, width: 2),
         ),
         filled: true,
-        fillColor: Theme.of(context).brightness == Brightness.light
-            ? AppColors.surface
-            : Colors.grey[900],
+        fillColor: AppColors.inputBackground,
+        hintStyle:
+            AppTextStyles.bodyMedium.copyWith(color: AppColors.textTertiary),
+        labelStyle:
+            AppTextStyles.bodyMedium.copyWith(color: AppColors.textTertiary),
       ),
+      style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
     );
   }
 }

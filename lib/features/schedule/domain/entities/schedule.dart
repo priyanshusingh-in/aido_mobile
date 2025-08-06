@@ -19,6 +19,7 @@ class Schedule extends Equatable {
   final Map<String, dynamic>? metadata;
   final String? userId;
   final String aiPrompt;
+  final String aiResponse; // Raw AI response from Gemini
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -37,6 +38,7 @@ class Schedule extends Equatable {
     this.metadata,
     this.userId,
     required this.aiPrompt,
+    required this.aiResponse,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -65,6 +67,7 @@ class Schedule extends Equatable {
         metadata,
         userId,
         aiPrompt,
+        aiResponse,
         createdAt,
         updatedAt,
       ];

@@ -16,8 +16,25 @@ class UserModel extends User {
     required super.updatedAt,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) =>
-      _$UserModelFromJson(json);
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    // Handle nullable fields from API response with default values
+    final id = json['id'] as String? ?? '';
+    final email = json['email'] as String? ?? '';
+    final firstName = json['firstName'] as String? ?? '';
+    final lastName = json['lastName'] as String? ?? '';
+
+    return UserModel(
+      id: id,
+      email: email,
+      firstName: firstName,
+      lastName: lastName,
+      isActive: json['isActive'] as bool? ?? true,
+      createdAt: DateTime.parse(
+          json['createdAt'] as String? ?? DateTime.now().toIso8601String()),
+      updatedAt: DateTime.parse(
+          json['updatedAt'] as String? ?? DateTime.now().toIso8601String()),
+    );
+  }
 
   Map<String, dynamic> toJson() => _$UserModelToJson(this);
 

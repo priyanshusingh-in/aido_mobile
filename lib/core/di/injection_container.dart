@@ -58,7 +58,13 @@ Future<void> initializeDependencies() async {
   getIt.registerLazySingleton(() => SecureStorageService());
 
   // Initialize notifications
-  await NotificationUtils.initialize();
+  // TODO: Temporarily disabled due to icon resource issue
+  // try {
+  //   await NotificationUtils.initialize();
+  // } catch (e) {
+  //   // Temporarily disable notifications if initialization fails
+  //   print('Warning: Notification initialization failed: $e');
+  // }
 
   // Auth
   getIt.registerLazySingleton<AuthRemoteDataSource>(

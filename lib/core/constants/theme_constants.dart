@@ -1,83 +1,79 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // Primary colors - Gemini-inspired
-  static const Color primary = Color(0xFF1A73E8);
-  static const Color primaryLight = Color(0xFF4285F4);
-  static const Color primaryDark = Color(0xFF0D47A1);
+  // Primary palette (Modern Task Scheduling App)
+  static const Color primary = Color(0xFF6366F1); // Deep Purple - modern, trustworthy
+  static const Color primaryDark = Color(0xFF4F46E5); // Darker Purple
+  static const Color accent = Color(0xFF3B82F6); // Soft Blue - calm, professional
+  static const Color accentLight = Color(0xFF06B6D4); // Bright Cyan - interactive
 
-  // Secondary colors
-  static const Color secondary = Color(0xFF34A853);
-  static const Color secondaryLight = Color(0xFF66BB6A);
-  static const Color secondaryDark = Color(0xFF2E7D32);
-
-  // Accent colors
-  static const Color accent = Color(0xFFEA4335);
-  static const Color accentLight = Color(0xFFEF5350);
-  static const Color accentDark = Color(0xFFD32F2F);
-
-  // Gemini-inspired gradients
-  static const Color gradientStart = Color(0xFF1A73E8);
-  static const Color gradientEnd = Color(0xFF34A853);
-  static const Color gradientAccent = Color(0xFFEA4335);
-
-  // Status colors
-  static const Color success = Color(0xFF34A853);
-  static const Color warning = Color(0xFFFBBC04);
-  static const Color error = Color(0xFFEA4335);
-  static const Color info = Color(0xFF4285F4);
-
-  // Priority colors
-  static const Color priorityHigh = Color(0xFFEA4335);
-  static const Color priorityMedium = Color(0xFFFBBC04);
-  static const Color priorityLow = Color(0xFF34A853);
-
-  // Schedule type colors
-  static const Color meeting = Color(0xFF4285F4);
-  static const Color reminder = Color(0xFF34A853);
-  static const Color task = Color(0xFFFBBC04);
-  static const Color appointment = Color(0xFFEA4335);
-
-  // Neutral colors - Gemini-inspired
-  static const Color textPrimary = Color(0xFF202124);
-  static const Color textSecondary = Color(0xFF5F6368);
-  static const Color textTertiary = Color(0xFF9AA0A6);
-
-  static const Color surface = Color(0xFFFAFAFA);
-  static const Color surfaceVariant = Color(0xFFF8F9FA);
-  static const Color border = Color(0xFFDADCE0);
-  static const Color divider = Color(0xFFE8EAED);
-
-  // Background colors
-  static const Color background = Color(0xFFFFFFFF);
-  static const Color backgroundSecondary = Color(0xFFF8F9FA);
+  // Backgrounds (Modern Dark Theme)
+  static const Color background = Color(0xFF0F172A); // Deep slate - easy on eyes
+  static const Color backgroundSecondary = Color(0xFF1E293B); // Lighter slate - cards
 
   // Card colors
-  static const Color cardBackground = Color(0xFFFFFFFF);
-  static const Color cardBorder = Color(0xFFE8EAED);
+  static const Color cardBackground = Color(0xFF1E293B);
+  static const Color cardBorder = Color(0xFF334155);
 
   // Input colors
-  static const Color inputBackground = Color(0xFFFFFFFF);
-  static const Color inputBorder = Color(0xFFDADCE0);
-  static const Color inputFocusedBorder = Color(0xFF1A73E8);
+  static const Color inputBackground = Color(0xFF1E293B);
+  static const Color inputBorder = Color(0xFF475569);
+  static const Color inputFocusedBorder = Color(0xFF6366F1);
 
-  // Gradients
+  // Status colors (Modern & Vibrant)
+  static const Color success = Color(0xFF10B981); // Mint Green - fresh, energetic
+  static const Color warning = Color(0xFFF59E0B); // Warm Orange - attention
+  static const Color error = Color(0xFFEF4444); // Modern Red
+  static const Color info = Color(0xFF06B6D4); // Bright Cyan
+
+  // Legacy colors for backward compatibility (mapped to new palette)
+  static const Color secondary = accent;
+  static const Color surfaceVariant = backgroundSecondary;
+
+  // Schedule type colors (Vibrant & Distinct)
+  static const Color meeting = Color(0xFF6366F1); // Deep Purple
+  static const Color reminder = Color(0xFF10B981); // Mint Green
+  static const Color task = Color(0xFF3B82F6); // Soft Blue
+  static const Color appointment = Color(0xFFEC4899); // Soft Pink
+
+  // Priority colors (Clear Visual Hierarchy)
+  static const Color priorityHigh = Color(0xFFEF4444); // Modern Red
+  static const Color priorityMedium = Color(0xFFF59E0B); // Warm Orange
+  static const Color priorityLow = Color(0xFF10B981); // Mint Green
+
+  // Text colors (High Contrast for Readability)
+  static const Color textPrimary = Color(0xFFF8FAFC); // Almost white
+  static const Color textSecondary = Color(0xFFCBD5E1); // Light gray
+  static const Color textTertiary = Color(0xFF94A3B8); // Medium gray
+
+  // Divider, border
+  static const Color divider = Color(0xFF334155);
+  static const Color border = Color(0xFF475569);
+
+  // Gradients (Modern & Professional)
   static const LinearGradient primaryGradient = LinearGradient(
-    colors: [gradientStart, gradientEnd],
+    colors: [primary, primaryDark],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
-
+  
   static const LinearGradient accentGradient = LinearGradient(
-    colors: [gradientStart, gradientAccent],
+    colors: [accent, accentLight],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
-
+  
   static const LinearGradient cardGradient = LinearGradient(
-    colors: [Color(0xFFFFFFFF), Color(0xFFF8F9FA)],
+    colors: [backgroundSecondary, background],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
+  );
+  
+  // Success gradient for positive actions
+  static const LinearGradient successGradient = LinearGradient(
+    colors: [success, Color(0xFF059669)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
   );
 }
 

@@ -42,23 +42,25 @@ class DateUtils {
 
   static bool isToday(DateTime date) {
     final now = DateTime.now();
-    return date.year == now.year && date.month == now.month && date.day == now.day;
+    return date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day;
   }
 
   static bool isTomorrow(DateTime date) {
     final tomorrow = DateTime.now().add(const Duration(days: 1));
-    return date.year == tomorrow.year && 
-           date.month == tomorrow.month && 
-           date.day == tomorrow.day;
+    return date.year == tomorrow.year &&
+        date.month == tomorrow.month &&
+        date.day == tomorrow.day;
   }
 
   static bool isThisWeek(DateTime date) {
     final now = DateTime.now();
     final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
     final endOfWeek = startOfWeek.add(const Duration(days: 6));
-    
+
     return date.isAfter(startOfWeek.subtract(const Duration(days: 1))) &&
-           date.isBefore(endOfWeek.add(const Duration(days: 1)));
+        date.isBefore(endOfWeek.add(const Duration(days: 1)));
   }
 
   static String getRelativeDateString(DateTime date) {
@@ -81,10 +83,64 @@ class DateUtils {
     return dateTime.isBefore(DateTime.now());
   }
 
-  static List<DateTime> getReminderTimes(DateTime scheduleTime, List<int> reminderMinutes) {
+  static List<DateTime> getReminderTimes(
+      DateTime scheduleTime, List<int> reminderMinutes) {
     return reminderMinutes
         .map((minutes) => scheduleTime.subtract(Duration(minutes: minutes)))
         .where((reminderTime) => reminderTime.isAfter(DateTime.now()))
         .toList();
+  }
+
+  /// Validates if a string contains relative time expressions
+  /// Examples: "in 2 minutes", "in 1 hour", "in 3 days", "in 1 week"
+  static bool containsRelativeTime(String text) {
+    final relativeTimePattern = RegExp(
+      r'\b(?:in\s+)?(\d+)\s+(?:minute|hour|day|week|month|year)s?\b',
+      caseSensitive: false,
+    );
+    return relativeTimePattern.hasMatch(text);
+  }
+
+  /// Extracts relative time information from text
+  /// Returns a map with 'value' and 'unit' keys, or null if not found
+  static Map<String, dynamic>? extractRelativeTime(String text) {
+    final pattern = RegExp(
+      r'\b(?:in\s+)?(\d+)\s+(minute|hour|day|week|month|year)s?\b',
+      caseSensitive: false,
+    );
+
+    final match = pattern.firstMatch(text);
+    if (match != null) {
+      return {
+        'value': int.parse(match.group(1)!),
+        'unit': match.group(2)!.toLowerCase(),
+      };
+    }
+    return null;
+  }
+
+  /// Formats relative time for display
+  /// Example: "in 2 minutes" -> "2 minutes from now"
+  static String formatRelativeTime(String text) {
+    final relativeTime = extractRelativeTime(text);
+    if (relativeTime != null) {
+      final value = relativeTime['value'];
+      final unit = relativeTime['unit'];
+      return '$value $unit${value > 1 ? 's' : ''} from now';
+    }
+    return text;
+  }
+
+  /// Gets example relative time expressions for UI
+  static List<String> getRelativeTimeExamples() {
+    return [
+      'in 2 minutes',
+      'in 1 hour',
+      'in 3 days',
+      'in 1 week',
+      'in 30 minutes',
+      'in 2 hours',
+      'in 1 month',
+    ];
   }
 }

@@ -23,16 +23,16 @@ class SettingsSection extends StatelessWidget {
             title,
             style: AppTextStyles.bodyMedium.copyWith(
               fontWeight: FontWeight.w600,
-              color: AppColors.primary,
+              color: AppColors.accent,
             ),
           ),
         ),
         Container(
           decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
+            color: AppColors.cardBackground,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: AppColors.border.withValues(alpha: 0.5),
+              color: AppColors.cardBorder.withOpacity(0.5),
             ),
           ),
           child: Column(
@@ -46,7 +46,7 @@ class SettingsSection extends StatelessWidget {
                   if (index < children.length - 1)
                     Divider(
                       height: 1,
-                      color: AppColors.border.withValues(alpha: 0.3),
+                      color: AppColors.cardBorder.withOpacity(0.3),
                     ),
                 ],
               );
