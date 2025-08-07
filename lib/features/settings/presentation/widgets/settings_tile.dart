@@ -26,7 +26,8 @@ class SettingsTile extends StatelessWidget {
       title: Text(
         title,
         style: AppTextStyles.bodyLarge.copyWith(
-          color: textColor,
+          color: textColor ?? AppColors.textPrimary,
+          fontWeight: FontWeight.w500,
         ),
       ),
       subtitle: subtitle != null
@@ -37,10 +38,40 @@ class SettingsTile extends StatelessWidget {
               ),
             )
           : null,
-      leading: leading,
-      trailing: trailing ?? (onTap != null ? const Icon(Icons.chevron_right) : null),
+      leading: leading != null
+          ? Container(
+              padding: const EdgeInsets.all(AppSpacing.sm),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(AppBorderRadius.medium),
+              ),
+              child: IconTheme(
+                data: IconThemeData(
+                  color: AppColors.primary,
+                  size: AppSizes.iconMedium,
+                ),
+                child: leading!,
+              ),
+            )
+          : null,
+      trailing: trailing ??
+          (onTap != null
+              ? Icon(
+                  Icons.chevron_right,
+                  color: AppColors.textTertiary,
+                  size: AppSizes.iconMedium,
+                )
+              : null),
       onTap: onTap,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.lg,
+        vertical: AppSpacing.md,
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppBorderRadius.medium),
+      ),
+      tileColor: AppColors.cardBackground,
+      minLeadingWidth: 0,
     );
   }
 }

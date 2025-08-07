@@ -67,8 +67,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
           }
         },
         child: Container(
-          decoration: const BoxDecoration(
-            gradient: AppColors.primaryGradient,
+          decoration: BoxDecoration(
+            color: AppColors.primary,
           ),
           child: SafeArea(
             child: Center(
@@ -168,11 +168,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                               onPressed: () {
                                 setState(() {
-                                  _obscureConfirmPassword = !_obscureConfirmPassword;
+                                  _obscureConfirmPassword =
+                                      !_obscureConfirmPassword;
                                 });
                               },
                             ),
-                            validator: (value) => Validators.validateConfirmPassword(
+                            validator: (value) =>
+                                Validators.validateConfirmPassword(
                               value,
                               _passwordController.text,
                             ),
@@ -192,7 +194,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: const Text('Already have an account? Sign In'),
+                            child:
+                                const Text('Already have an account? Sign In'),
                           ),
                         ],
                       ),

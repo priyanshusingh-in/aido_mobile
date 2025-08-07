@@ -16,11 +16,18 @@ class SettingsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
+        backgroundColor: AppColors.backgroundSecondary,
+        elevation: 0,
+        shadowColor: AppColors.cardShadow,
       ),
       body: BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, state) {
           if (state is SettingsLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(
+                color: AppColors.primary,
+              ),
+            );
           } else if (state is SettingsLoaded) {
             return SingleChildScrollView(
               padding: const EdgeInsets.all(16),
@@ -38,58 +45,6 @@ class SettingsScreen extends StatelessWidget {
                         leading: const Icon(Icons.palette_outlined),
                         onTap: () =>
                             _showThemeDialog(context, state.settings.themeMode),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  SettingsSection(
-                    title: 'Notifications',
-                    children: [
-                      SettingsTile(
-                        title: 'Enable Notifications',
-                        subtitle: 'Receive schedule reminders',
-                        leading: const Icon(Icons.notifications_outlined),
-                        trailing: Switch(
-                          value: state.settings.notificationsEnabled,
-                          onChanged: (value) {
-                            context.read<SettingsBloc>().add(
-                                  UpdateSettings(
-                                    settings: state.settings.copyWith(
-                                      notificationsEnabled: value,
-                                    ),
-                                  ),
-                                );
-                          },
-                        ),
-                      ),
-                      SettingsTile(
-                        title: 'Sound',
-                        subtitle: 'Play sound for notifications',
-                        leading: const Icon(Icons.volume_up_outlined),
-                        trailing: Switch(
-                          value: state.settings.soundEnabled,
-                          onChanged: state.settings.notificationsEnabled
-                              ? (value) {
-                                  context.read<SettingsBloc>().add(
-                                        UpdateSettings(
-                                          settings: state.settings.copyWith(
-                                            soundEnabled: value,
-                                          ),
-                                        ),
-                                      );
-                                }
-                              : null,
-                        ),
-                      ),
-                      SettingsTile(
-                        title: 'Default Reminders',
-                        subtitle: _getReminderTimesLabel(
-                            state.settings.defaultReminderTimes),
-                        leading: const Icon(Icons.access_time),
-                        onTap: () => _showReminderTimesDialog(
-                          context,
-                          state.settings.defaultReminderTimes,
-                        ),
                       ),
                     ],
                   ),
@@ -115,20 +70,6 @@ class SettingsScreen extends StatelessWidget {
                         subtitle: '1.0.0',
                         leading: Icon(Icons.info_outline),
                       ),
-                      SettingsTile(
-                        title: 'Privacy Policy',
-                        leading: const Icon(Icons.privacy_tip_outlined),
-                        onTap: () {
-                          // TODO: Open privacy policy
-                        },
-                      ),
-                      SettingsTile(
-                        title: 'Terms of Service',
-                        leading: const Icon(Icons.description_outlined),
-                        onTap: () {
-                          // TODO: Open terms of service
-                        },
-                      ),
                     ],
                   ),
                 ],
@@ -136,39 +77,50 @@ class SettingsScreen extends StatelessWidget {
             );
           } else if (state is SettingsError) {
             return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 64,
-                    color: AppColors.error,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Error loading settings',
-                    style: AppTextStyles.heading3.copyWith(
-                      color: AppColors.error,
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(AppSpacing.lg),
+                      decoration: BoxDecoration(
+                        color: AppColors.error.withOpacity(0.1),
+                        borderRadius:
+                            BorderRadius.circular(AppBorderRadius.round),
+                      ),
+                      child: Icon(
+                        Icons.error_outline,
+                        size: AppSizes.iconXLarge,
+                        color: AppColors.error,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    state.message,
-                    style: AppTextStyles.bodyMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      context.read<SettingsBloc>().add(LoadSettings());
-                    },
-                    child: const Text('Retry'),
-                  ),
-                ],
+                    const SizedBox(height: AppSpacing.lg),
+                    Text(
+                      'Error loading settings',
+                      style: AppTextStyles.heading2.copyWith(
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    Text(
+                      state.message,
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
+                    ElevatedButton(
+                      onPressed: () =>
+                          context.read<SettingsBloc>().add(LoadSettings()),
+                      child: const Text('Retry'),
+                    ),
+                  ],
+                ),
               ),
             );
           }
-
           return const SizedBox.shrink();
         },
       ),
@@ -180,44 +132,43 @@ class SettingsScreen extends StatelessWidget {
       builder: (context, state) {
         if (state is AuthAuthenticated) {
           return Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(AppSpacing.lg),
             decoration: BoxDecoration(
-              gradient: AppColors.primaryGradient,
-              borderRadius: BorderRadius.circular(12),
+              color: AppColors.cardBackground,
+              borderRadius: BorderRadius.circular(AppBorderRadius.large),
+              border: Border.all(color: AppColors.cardBorder, width: 1),
+              boxShadow: AppShadows.card,
             ),
             child: Row(
               children: [
                 CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Colors.white.withValues(alpha: 0.2),
+                  radius: AppSizes.avatarMedium / 2,
+                  backgroundColor: AppColors.primary.withOpacity(0.12),
                   child: Text(
                     state.user.firstName[0].toUpperCase(),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
+                    style: TextStyle(
+                      color: AppColors.primary,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: AppSpacing.md),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         state.user.fullName,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
+                        style: AppTextStyles.heading2.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: AppSpacing.xs),
                       Text(
                         state.user.email,
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 14,
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          color: AppColors.textSecondary,
                         ),
                       ),
                     ],
@@ -241,21 +192,6 @@ class SettingsScreen extends StatelessWidget {
       case ThemeMode.system:
         return 'System';
     }
-  }
-
-  String _getReminderTimesLabel(List<int> reminderTimes) {
-    if (reminderTimes.isEmpty) return 'None';
-
-    final labels = reminderTimes.map((minutes) {
-      if (minutes < 60) {
-        return '${minutes}m';
-      } else {
-        final hours = minutes ~/ 60;
-        return '${hours}h';
-      }
-    }).toList();
-
-    return labels.join(', ');
   }
 
   void _showThemeDialog(BuildContext context, ThemeMode currentTheme) {
@@ -319,77 +255,6 @@ class SettingsScreen extends StatelessWidget {
                   Navigator.of(context).pop();
                 }
               },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showReminderTimesDialog(BuildContext context, List<int> currentTimes) {
-    final availableTimes = [
-      5,
-      15,
-      30,
-      60,
-      120,
-      1440
-    ]; // 5m, 15m, 30m, 1h, 2h, 1d
-    final selectedTimes = List<int>.from(currentTimes);
-
-    showDialog(
-      context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
-          title: const Text('Default Reminder Times'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: availableTimes.map((minutes) {
-              String label;
-              if (minutes < 60) {
-                label = '$minutes minutes before';
-              } else if (minutes < 1440) {
-                final hours = minutes ~/ 60;
-                label = '$hours hour${hours > 1 ? 's' : ''} before';
-              } else {
-                final days = minutes ~/ 1440;
-                label = '$days day${days > 1 ? 's' : ''} before';
-              }
-
-              return CheckboxListTile(
-                title: Text(label),
-                value: selectedTimes.contains(minutes),
-                onChanged: (value) {
-                  setState(() {
-                    if (value == true) {
-                      selectedTimes.add(minutes);
-                    } else {
-                      selectedTimes.remove(minutes);
-                    }
-                    selectedTimes.sort();
-                  });
-                },
-              );
-            }).toList(),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                context.read<SettingsBloc>().add(
-                      UpdateSettings(
-                        settings: (context.read<SettingsBloc>().state
-                                as SettingsLoaded)
-                            .settings
-                            .copyWith(defaultReminderTimes: selectedTimes),
-                      ),
-                    );
-                Navigator.of(context).pop();
-              },
-              child: const Text('Save'),
             ),
           ],
         ),

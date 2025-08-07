@@ -80,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          gradient: AppColors.primaryGradient,
+                          color: AppColors.primary,
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,

@@ -8,8 +8,6 @@ import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/domain/repositories/auth_repository.dart';
 import '../../../schedule/presentation/bloc/schedule_bloc.dart';
 import '../widgets/ai_prompt_input.dart';
-import '../widgets/recent_schedules_section.dart';
-import '../widgets/quick_actions_section.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -56,17 +54,14 @@ class _HomeScreenState extends State<HomeScreen> {
             slivers: [
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.lg),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.lg, vertical: AppSpacing.xl),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildHeader(),
                       const SizedBox(height: AppSpacing.xl),
                       const AIPromptInput(),
-                      const SizedBox(height: AppSpacing.xxl),
-                      const QuickActionsSection(),
-                      const SizedBox(height: AppSpacing.xxl),
-                      const RecentSchedulesSection(),
                       const SizedBox(height: AppSpacing.xxl),
                     ],
                   ),
@@ -84,17 +79,15 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context, state) {
         String greeting = _getGreeting();
         String userName = 'User';
-
         if (state is AuthAuthenticated) {
           userName = state.user.firstName;
         }
-
         return Container(
           padding: const EdgeInsets.all(AppSpacing.lg),
           decoration: BoxDecoration(
-            gradient: AppColors.cardGradient,
+            color: AppColors.cardBackground,
             borderRadius: BorderRadius.circular(AppBorderRadius.large),
-            border: Border.all(color: AppColors.cardBorder),
+            border: Border.all(color: AppColors.cardBorder, width: 1),
             boxShadow: AppShadows.card,
           ),
           child: Column(
@@ -105,14 +98,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   Container(
                     padding: const EdgeInsets.all(AppSpacing.sm),
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withValues(alpha: 0.1),
+                      color: AppColors.primary.withOpacity(0.1),
                       borderRadius:
                           BorderRadius.circular(AppBorderRadius.round),
                     ),
                     child: Icon(
                       Icons.auto_awesome,
                       color: AppColors.primary,
-                      size: 24,
+                      size: AppSizes.iconMedium,
                     ),
                   ),
                   const SizedBox(width: AppSpacing.md),
@@ -129,43 +122,44 @@ class _HomeScreenState extends State<HomeScreen> {
                         const SizedBox(height: AppSpacing.xs),
                         Text(
                           'Hello, $userName!',
-                          style: AppTextStyles.heading3.copyWith(
+                          style: AppTextStyles.heading1.copyWith(
                             fontWeight: FontWeight.w700,
                           ),
                         ),
                       ],
                     ),
                   ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+                    decoration: BoxDecoration(
+                      color: AppColors.surface,
+                      borderRadius:
+                          BorderRadius.circular(AppBorderRadius.medium),
+                      border:
+                          Border.all(color: AppColors.borderLight, width: 1),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.calendar_today,
+                          size: AppSizes.iconSmall,
+                          color: AppColors.textSecondary,
+                        ),
+                        const SizedBox(width: AppSpacing.sm),
+                        Text(
+                          date_utils.DateUtils.formatDisplayDate(
+                              DateTime.now()),
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: AppColors.textSecondary,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
-              ),
-              const SizedBox(height: AppSpacing.md),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.md,
-                  vertical: AppSpacing.sm,
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.surfaceVariant,
-                  borderRadius: BorderRadius.circular(AppBorderRadius.medium),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.calendar_today,
-                      size: 16,
-                      color: AppColors.textSecondary,
-                    ),
-                    const SizedBox(width: AppSpacing.sm),
-                    Text(
-                      date_utils.DateUtils.formatDisplayDate(DateTime.now()),
-                      style: AppTextStyles.bodySmall.copyWith(
-                        color: AppColors.textSecondary,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
               ),
             ],
           ),

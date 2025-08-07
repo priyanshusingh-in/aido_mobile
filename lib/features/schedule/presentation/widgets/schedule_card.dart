@@ -22,9 +22,9 @@ class ScheduleCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        gradient: AppColors.cardGradient,
+        color: AppColors.cardBackground,
         borderRadius: BorderRadius.circular(AppBorderRadius.large),
-        border: Border.all(color: AppColors.cardBorder),
+        border: Border.all(color: AppColors.cardBorder, width: 1),
         boxShadow: AppShadows.card,
       ),
       child: Material(
@@ -42,14 +42,14 @@ class ScheduleCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(AppSpacing.sm),
                       decoration: BoxDecoration(
-                        color: _getTypeColor().withValues(alpha: 0.1),
+                        color: _getTypeColor().withOpacity(0.1),
                         borderRadius:
                             BorderRadius.circular(AppBorderRadius.medium),
                       ),
                       child: Icon(
                         _getTypeIcon(),
                         color: _getTypeColor(),
-                        size: 20,
+                        size: AppSizes.iconMedium,
                       ),
                     ),
                     const SizedBox(width: AppSpacing.md),
@@ -59,7 +59,7 @@ class ScheduleCard extends StatelessWidget {
                         children: [
                           Text(
                             schedule.title,
-                            style: AppTextStyles.bodyLarge.copyWith(
+                            style: AppTextStyles.heading3.copyWith(
                               fontWeight: FontWeight.w700,
                               color: AppColors.textPrimary,
                             ),
@@ -80,37 +80,61 @@ class ScheduleCard extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.sm,
-                        vertical: AppSpacing.xs,
+                    if (onEdit != null || onDelete != null)
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (onEdit != null)
+                            Container(
+                              decoration: BoxDecoration(
+                                color: AppColors.primary.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(
+                                    AppBorderRadius.medium),
+                              ),
+                              child: IconButton(
+                                onPressed: onEdit,
+                                icon: Icon(
+                                  Icons.edit_outlined,
+                                  size: AppSizes.iconSmall,
+                                  color: AppColors.primary,
+                                ),
+                                splashRadius: 20,
+                                padding: const EdgeInsets.all(AppSpacing.sm),
+                                constraints: const BoxConstraints(),
+                              ),
+                            ),
+                          if (onDelete != null) ...[
+                            const SizedBox(width: AppSpacing.xs),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: AppColors.error.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(
+                                    AppBorderRadius.medium),
+                              ),
+                              child: IconButton(
+                                onPressed: onDelete,
+                                icon: Icon(
+                                  Icons.delete_outline,
+                                  size: AppSizes.iconSmall,
+                                  color: AppColors.error,
+                                ),
+                                splashRadius: 20,
+                                padding: const EdgeInsets.all(AppSpacing.sm),
+                                constraints: const BoxConstraints(),
+                              ),
+                            ),
+                          ],
+                        ],
                       ),
-                      decoration: BoxDecoration(
-                        color: _getPriorityColor().withValues(alpha: 0.1),
-                        borderRadius:
-                            BorderRadius.circular(AppBorderRadius.round),
-                        border: Border.all(
-                          color: _getPriorityColor().withValues(alpha: 0.3),
-                          width: 1,
-                        ),
-                      ),
-                      child: Text(
-                        schedule.priority.name.toUpperCase(),
-                        style: AppTextStyles.caption.copyWith(
-                          color: _getPriorityColor(),
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                    ),
                   ],
                 ),
                 const SizedBox(height: AppSpacing.md),
                 Container(
                   padding: const EdgeInsets.all(AppSpacing.md),
                   decoration: BoxDecoration(
-                    color: AppColors.surfaceVariant,
+                    color: AppColors.surface,
                     borderRadius: BorderRadius.circular(AppBorderRadius.medium),
+                    border: Border.all(color: AppColors.borderLight, width: 1),
                   ),
                   child: Column(
                     children: [
@@ -118,7 +142,7 @@ class ScheduleCard extends StatelessWidget {
                         children: [
                           Icon(
                             Icons.access_time,
-                            size: 16,
+                            size: AppSizes.iconSmall,
                             color: AppColors.textSecondary,
                           ),
                           const SizedBox(width: AppSpacing.sm),
@@ -132,13 +156,14 @@ class ScheduleCard extends StatelessWidget {
                             ),
                           ),
                           if (schedule.duration != null) ...[
+                            const SizedBox(width: AppSpacing.sm),
                             Container(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: AppSpacing.sm,
                                 vertical: AppSpacing.xs,
                               ),
                               decoration: BoxDecoration(
-                                color: AppColors.primary.withValues(alpha: 0.1),
+                                color: AppColors.primary.withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(
                                     AppBorderRadius.small),
                               ),
@@ -152,7 +177,7 @@ class ScheduleCard extends StatelessWidget {
                                   ),
                                   const SizedBox(width: AppSpacing.xs),
                                   Text(
-                                    '${schedule.duration} min',
+                                    '${schedule.duration!} min',
                                     style: AppTextStyles.caption.copyWith(
                                       color: AppColors.primary,
                                       fontWeight: FontWeight.w600,
@@ -170,7 +195,7 @@ class ScheduleCard extends StatelessWidget {
                           children: [
                             Icon(
                               Icons.location_on_outlined,
-                              size: 16,
+                              size: AppSizes.iconSmall,
                               color: AppColors.textSecondary,
                             ),
                             const SizedBox(width: AppSpacing.sm),
@@ -193,7 +218,7 @@ class ScheduleCard extends StatelessWidget {
                           children: [
                             Icon(
                               Icons.people_outline,
-                              size: 16,
+                              size: AppSizes.iconSmall,
                               color: AppColors.textSecondary,
                             ),
                             const SizedBox(width: AppSpacing.sm),
@@ -213,58 +238,6 @@ class ScheduleCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (onEdit != null || onDelete != null) ...[
-                  const SizedBox(height: AppSpacing.md),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      if (onEdit != null)
-                        Container(
-                          decoration: BoxDecoration(
-                            color: AppColors.primary.withValues(alpha: 0.1),
-                            borderRadius:
-                                BorderRadius.circular(AppBorderRadius.round),
-                          ),
-                          child: IconButton(
-                            onPressed: onEdit,
-                            icon: Icon(
-                              Icons.edit_outlined,
-                              color: AppColors.primary,
-                              size: 18,
-                            ),
-                            padding: const EdgeInsets.all(AppSpacing.sm),
-                            constraints: const BoxConstraints(
-                              minWidth: 36,
-                              minHeight: 36,
-                            ),
-                          ),
-                        ),
-                      if (onEdit != null && onDelete != null)
-                        const SizedBox(width: AppSpacing.sm),
-                      if (onDelete != null)
-                        Container(
-                          decoration: BoxDecoration(
-                            color: AppColors.error.withValues(alpha: 0.1),
-                            borderRadius:
-                                BorderRadius.circular(AppBorderRadius.round),
-                          ),
-                          child: IconButton(
-                            onPressed: onDelete,
-                            icon: Icon(
-                              Icons.delete_outline,
-                              color: AppColors.error,
-                              size: 18,
-                            ),
-                            padding: const EdgeInsets.all(AppSpacing.sm),
-                            constraints: const BoxConstraints(
-                              minWidth: 36,
-                              minHeight: 36,
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ],
               ],
             ),
           ),
@@ -296,17 +269,6 @@ class ScheduleCard extends StatelessWidget {
         return Icons.task_outlined;
       case ScheduleType.appointment:
         return Icons.event_outlined;
-    }
-  }
-
-  Color _getPriorityColor() {
-    switch (schedule.priority) {
-      case Priority.high:
-        return AppColors.priorityHigh;
-      case Priority.medium:
-        return AppColors.priorityMedium;
-      case Priority.low:
-        return AppColors.priorityLow;
     }
   }
 }

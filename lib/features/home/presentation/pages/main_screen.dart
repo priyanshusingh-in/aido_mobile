@@ -39,18 +39,18 @@ class _MainScreenState extends State<MainScreen> {
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
             color: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-            boxShadow: AppShadows.medium,
             border: Border(
               top: BorderSide(
                 color: AppColors.divider,
-                width: 0.5,
+                width: 1,
               ),
             ),
+            boxShadow: AppShadows.medium,
           ),
           child: SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+                  horizontal: AppSpacing.lg, vertical: AppSpacing.md),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -71,8 +71,6 @@ class _MainScreenState extends State<MainScreen> {
   Widget _buildNavItem(
       int index, IconData icon, IconData activeIcon, String label) {
     final isSelected = _currentIndex == index;
-    final theme = Theme.of(context);
-
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -84,7 +82,7 @@ class _MainScreenState extends State<MainScreen> {
             horizontal: AppSpacing.md, vertical: AppSpacing.sm),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppColors.primary.withValues(alpha: 0.1)
+              ? AppColors.primary.withOpacity(0.1)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(AppBorderRadius.medium),
         ),
@@ -94,7 +92,7 @@ class _MainScreenState extends State<MainScreen> {
             Icon(
               isSelected ? activeIcon : icon,
               color: isSelected ? AppColors.primary : AppColors.textTertiary,
-              size: 24,
+              size: AppSizes.iconMedium,
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(

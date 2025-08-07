@@ -18,35 +18,38 @@ class SettingsSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 16, bottom: 8),
+          padding: const EdgeInsets.only(left: 0, bottom: AppSpacing.sm),
           child: Text(
             title,
-            style: AppTextStyles.bodyMedium.copyWith(
+            style: AppTextStyles.heading4.copyWith(
               fontWeight: FontWeight.w600,
-              color: AppColors.accent,
+              color: AppColors.textPrimary,
             ),
           ),
         ),
         Container(
           decoration: BoxDecoration(
             color: AppColors.cardBackground,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppBorderRadius.large),
             border: Border.all(
-              color: AppColors.cardBorder.withOpacity(0.5),
+              color: AppColors.cardBorder,
+              width: 1,
             ),
+            boxShadow: AppShadows.card,
           ),
           child: Column(
             children: children.asMap().entries.map((entry) {
               final index = entry.key;
               final child = entry.value;
-
               return Column(
                 children: [
                   child,
                   if (index < children.length - 1)
                     Divider(
                       height: 1,
-                      color: AppColors.cardBorder.withOpacity(0.3),
+                      color: AppColors.divider,
+                      indent: AppSpacing.lg,
+                      endIndent: AppSpacing.lg,
                     ),
                 ],
               );

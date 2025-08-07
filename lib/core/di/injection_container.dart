@@ -7,7 +7,6 @@ import '../constants/api_constants.dart';
 import '../network/api_client.dart';
 import '../network/dio_client.dart';
 import '../network/network_info.dart';
-import '../utils/notification_utils.dart';
 import '../utils/secure_storage_service.dart';
 
 // Auth
@@ -56,15 +55,6 @@ Future<void> initializeDependencies() async {
   getIt.registerLazySingleton(
       () => ApiClient(getIt<DioClient>().dio, baseUrl: ApiConstants.baseUrl));
   getIt.registerLazySingleton(() => SecureStorageService());
-
-  // Initialize notifications
-  // TODO: Temporarily disabled due to icon resource issue
-  // try {
-  //   await NotificationUtils.initialize();
-  // } catch (e) {
-  //   // Temporarily disable notifications if initialization fails
-  //   print('Warning: Notification initialization failed: $e');
-  // }
 
   // Auth
   getIt.registerLazySingleton<AuthRemoteDataSource>(

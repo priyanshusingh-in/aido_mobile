@@ -64,7 +64,6 @@ class _AIPromptInputState extends State<AIPromptInput> {
           final schedule = state.schedule;
           final usedRelativeTime =
               app_date_utils.DateUtils.containsRelativeTime(schedule.aiPrompt);
-
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Column(
@@ -104,9 +103,10 @@ class _AIPromptInputState extends State<AIPromptInput> {
       },
       child: Container(
         decoration: BoxDecoration(
-          gradient: AppColors.primaryGradient,
-          borderRadius: BorderRadius.circular(AppBorderRadius.xlarge),
-          boxShadow: AppShadows.large,
+          color: AppColors.cardBackground,
+          borderRadius: BorderRadius.circular(AppBorderRadius.large),
+          border: Border.all(color: AppColors.cardBorder, width: 1),
+          boxShadow: AppShadows.card,
         ),
         padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
@@ -117,13 +117,13 @@ class _AIPromptInputState extends State<AIPromptInput> {
                 Container(
                   padding: const EdgeInsets.all(AppSpacing.sm),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
+                    color: AppColors.primary.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(AppBorderRadius.round),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.auto_awesome,
-                    color: Colors.white,
-                    size: 20,
+                    color: AppColors.primary,
+                    size: AppSizes.iconMedium,
                   ),
                 ),
                 const SizedBox(width: AppSpacing.md),
@@ -131,22 +131,17 @@ class _AIPromptInputState extends State<AIPromptInput> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'AI Scheduling Assistant',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
+                        style: AppTextStyles.heading2.copyWith(
                           fontWeight: FontWeight.w700,
-                          letterSpacing: -0.2,
                         ),
                       ),
                       const SizedBox(height: AppSpacing.xs),
-                      const Text(
+                      Text(
                         'Tell me what you want to schedule',
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          color: AppColors.textSecondary,
                         ),
                       ),
                     ],
@@ -157,9 +152,9 @@ class _AIPromptInputState extends State<AIPromptInput> {
             const SizedBox(height: AppSpacing.lg),
             Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.inputBackground,
                 borderRadius: BorderRadius.circular(AppBorderRadius.medium),
-                boxShadow: AppShadows.small,
+                border: Border.all(color: AppColors.inputBorder, width: 1),
               ),
               child: TextField(
                 controller: _controller,
@@ -177,160 +172,36 @@ class _AIPromptInputState extends State<AIPromptInput> {
                   ),
                   border: InputBorder.none,
                   contentPadding: const EdgeInsets.all(AppSpacing.md),
-                  suffixIcon: _controller.text.isNotEmpty &&
-                          app_date_utils.DateUtils.containsRelativeTime(
-                              _controller.text)
+                  suffixIcon: _controller.text.isNotEmpty
                       ? Container(
                           margin: const EdgeInsets.all(AppSpacing.sm),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.sm,
-                            vertical: AppSpacing.xs,
-                          ),
                           decoration: BoxDecoration(
-                            color: AppColors.primary.withValues(alpha: 0.1),
+                            color: AppColors.primary,
                             borderRadius:
-                                BorderRadius.circular(AppBorderRadius.small),
+                                BorderRadius.circular(AppBorderRadius.medium),
+                            boxShadow: AppShadows.button,
                           ),
-                          child: Text(
-                            '⏰',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: AppColors.primary,
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.send,
+                              color: AppColors.textInverse,
+                              size: 18,
+                            ),
+                            onPressed: _handleSubmit,
+                            style: IconButton.styleFrom(
+                              padding: const EdgeInsets.all(AppSpacing.sm),
                             ),
                           ),
                         )
                       : null,
                 ),
                 onChanged: (value) {
-                  setState(() {
-                    // Trigger rebuild to show/hide relative time indicator
-                  });
+                  setState(() {});
                 },
                 onSubmitted: (_) => _handleSubmit(),
               ),
             ),
-            const SizedBox(height: AppSpacing.lg),
-            Wrap(
-              spacing: AppSpacing.sm,
-              runSpacing: AppSpacing.sm,
-              children: [
-                ...app_date_utils.DateUtils.getRelativeTimeExamples()
-                    .take(4)
-                    .map(_buildExampleChip),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.md),
-            Container(
-              padding: const EdgeInsets.all(AppSpacing.sm),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(AppBorderRadius.small),
-                border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.2),
-                  width: 1,
-                ),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.access_time,
-                    color: Colors.white70,
-                    size: 16,
-                  ),
-                  const SizedBox(width: AppSpacing.xs),
-                  Expanded(
-                    child: Text(
-                      '💡 Try relative time: "in 2 minutes", "in 1 hour", "in 3 days", "in 1 week"',
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            BlocBuilder<ScheduleBloc, ScheduleState>(
-              builder: (context, state) {
-                return SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: state is ScheduleCreating ? null : _handleSubmit,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: AppColors.primary,
-                      elevation: 0,
-                      padding:
-                          const EdgeInsets.symmetric(vertical: AppSpacing.md),
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(AppBorderRadius.medium),
-                      ),
-                    ),
-                    child: state is ScheduleCreating
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                  AppColors.primary),
-                            ),
-                          )
-                        : Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.schedule,
-                                size: 18,
-                              ),
-                              const SizedBox(width: AppSpacing.sm),
-                              Text(
-                                'Create Schedule',
-                                style: AppTextStyles.buttonMedium.copyWith(
-                                  color: AppColors.primary,
-                                ),
-                              ),
-                            ],
-                          ),
-                  ),
-                );
-              },
-            ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildExampleChip(String text) {
-    return GestureDetector(
-      onTap: () {
-        _controller.text = text;
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.md, vertical: AppSpacing.sm),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.15),
-          borderRadius: BorderRadius.circular(AppBorderRadius.round),
-          border: Border.all(
-            color: Colors.white.withValues(alpha: 0.3),
-            width: 1,
-          ),
-        ),
-        child: Text(
-          text,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-          ),
-          textAlign: TextAlign.center,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
         ),
       ),
     );
