@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/constants/theme_constants.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import 'home_screen.dart';
 import '../../../schedule/presentation/pages/schedule_list_screen.dart';
@@ -31,79 +30,72 @@ class _MainScreenState extends State<MainScreen> {
           Navigator.of(context).pushReplacementNamed('/login');
         }
       },
-      child: Scaffold(
-        body: IndexedStack(
-          index: _currentIndex,
-          children: _screens,
-        ),
-        bottomNavigationBar: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-            border: Border(
-              top: BorderSide(
-                color: AppColors.divider,
-                width: 1,
-              ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final isWide = constraints.maxWidth >= 900;
+          return Scaffold(
+            body: Row(
+              children: [
+                if (isWide)
+                  NavigationRail(
+                    selectedIndex: _currentIndex,
+                    onDestinationSelected: (i) => setState(() {
+                      _currentIndex = i;
+                    }),
+                    extended: constraints.maxWidth >= 1200,
+                    destinations: const [
+                      NavigationRailDestination(
+                        icon: Icon(Icons.home_outlined),
+                        selectedIcon: Icon(Icons.home),
+                        label: Text('Home'),
+                      ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.schedule_outlined),
+                        selectedIcon: Icon(Icons.schedule),
+                        label: Text('Schedules'),
+                      ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.settings_outlined),
+                        selectedIcon: Icon(Icons.settings),
+                        label: Text('Settings'),
+                      ),
+                    ],
+                  ),
+                Expanded(
+                  child: IndexedStack(
+                    index: _currentIndex,
+                    children: _screens,
+                  ),
+                ),
+              ],
             ),
-            boxShadow: AppShadows.medium,
-          ),
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.lg, vertical: AppSpacing.md),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildNavItem(0, Icons.home_outlined, Icons.home, 'Home'),
-                  _buildNavItem(
-                      1, Icons.schedule_outlined, Icons.schedule, 'Schedules'),
-                  _buildNavItem(
-                      2, Icons.settings_outlined, Icons.settings, 'Settings'),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNavItem(
-      int index, IconData icon, IconData activeIcon, String label) {
-    final isSelected = _currentIndex == index;
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _currentIndex = index;
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.md, vertical: AppSpacing.sm),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? AppColors.primary.withOpacity(0.1)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(AppBorderRadius.medium),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              isSelected ? activeIcon : icon,
-              color: isSelected ? AppColors.primary : AppColors.textTertiary,
-              size: AppSizes.iconMedium,
-            ),
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              label,
-              style: AppTextStyles.caption.copyWith(
-                color: isSelected ? AppColors.primary : AppColors.textTertiary,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-              ),
-            ),
-          ],
-        ),
+            bottomNavigationBar: isWide
+                ? null
+                : NavigationBar(
+                    selectedIndex: _currentIndex,
+                    onDestinationSelected: (i) => setState(() {
+                      _currentIndex = i;
+                    }),
+                    destinations: const [
+                      NavigationDestination(
+                        icon: Icon(Icons.home_outlined),
+                        selectedIcon: Icon(Icons.home),
+                        label: 'Home',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.schedule_outlined),
+                        selectedIcon: Icon(Icons.schedule),
+                        label: 'Schedules',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.settings_outlined),
+                        selectedIcon: Icon(Icons.settings),
+                        label: 'Settings',
+                      ),
+                    ],
+                  ),
+          );
+        },
       ),
     );
   }

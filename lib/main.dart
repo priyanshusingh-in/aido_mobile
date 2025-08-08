@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -48,6 +49,10 @@ class AidoApp extends StatelessWidget {
           return MaterialApp(
             title: EnvConfig.appName,
             debugShowCheckedModeBanner: false,
+            builder: (context, child) => ScrollConfiguration(
+              behavior: AppScrollBehavior(),
+              child: child!,
+            ),
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
             themeMode: settingsState is SettingsLoaded
@@ -66,6 +71,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
+      visualDensity: VisualDensity.adaptivePlatformDensity,
       colorScheme: ColorScheme.light(
         primary: AppColors.primary,
         secondary: AppColors.accent,
@@ -81,6 +87,24 @@ class AppTheme {
       scaffoldBackgroundColor: AppColors.background,
       cardColor: AppColors.cardBackground,
       dividerColor: AppColors.divider,
+      snackBarTheme: const SnackBarThemeData(
+        backgroundColor: AppColors.textPrimary,
+        behavior: SnackBarBehavior.floating,
+        contentTextStyle: TextStyle(color: AppColors.textInverse),
+        shape: RoundedRectangleBorder(
+          borderRadius:
+              BorderRadius.all(Radius.circular(AppBorderRadius.medium)),
+        ),
+      ),
+      scrollbarTheme: ScrollbarThemeData(
+        thickness: const MaterialStatePropertyAll(8),
+        radius: const Radius.circular(8),
+        thumbVisibility: const MaterialStatePropertyAll(true),
+        thumbColor: MaterialStateProperty.resolveWith((states) {
+          return AppColors.textTertiary
+              .withOpacity(states.contains(MaterialState.hovered) ? 0.6 : 0.4);
+        }),
+      ),
       textTheme: GoogleFonts.interTextTheme().copyWith(
         displayLarge: AppTextStyles.displayLarge,
         displayMedium: AppTextStyles.displayMedium,
@@ -96,6 +120,23 @@ class AppTheme {
         bodySmall: AppTextStyles.bodySmall,
         labelLarge: AppTextStyles.label,
         labelSmall: AppTextStyles.caption,
+      ),
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: AppColors.backgroundSecondary,
+        indicatorColor: AppColors.primary.withOpacity(0.1),
+        labelTextStyle: const MaterialStatePropertyAll(AppTextStyles.caption),
+        elevation: 0,
+      ),
+      navigationRailTheme: NavigationRailThemeData(
+        backgroundColor: AppColors.backgroundSecondary,
+        indicatorColor: AppColors.primary.withOpacity(0.1),
+        selectedIconTheme: const IconThemeData(color: AppColors.primary),
+        selectedLabelTextStyle: AppTextStyles.caption
+            .copyWith(color: AppColors.primary, fontWeight: FontWeight.w600),
+        unselectedIconTheme: const IconThemeData(color: AppColors.textTertiary),
+        unselectedLabelTextStyle:
+            AppTextStyles.caption.copyWith(color: AppColors.textTertiary),
+        elevation: 0,
       ),
       appBarTheme: const AppBarTheme(
         elevation: 0,
@@ -215,6 +256,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
+      visualDensity: VisualDensity.adaptivePlatformDensity,
       colorScheme: ColorScheme.dark(
         primary: AppColors.primary,
         secondary: AppColors.accent,
@@ -230,6 +272,24 @@ class AppTheme {
       scaffoldBackgroundColor: AppColors.backgroundSecondary,
       cardColor: AppColors.cardBackground,
       dividerColor: AppColors.divider,
+      snackBarTheme: const SnackBarThemeData(
+        backgroundColor: AppColors.textPrimary,
+        behavior: SnackBarBehavior.floating,
+        contentTextStyle: TextStyle(color: AppColors.textInverse),
+        shape: RoundedRectangleBorder(
+          borderRadius:
+              BorderRadius.all(Radius.circular(AppBorderRadius.medium)),
+        ),
+      ),
+      scrollbarTheme: ScrollbarThemeData(
+        thickness: const MaterialStatePropertyAll(8),
+        radius: const Radius.circular(8),
+        thumbVisibility: const MaterialStatePropertyAll(true),
+        thumbColor: MaterialStateProperty.resolveWith((states) {
+          return AppColors.textTertiary
+              .withOpacity(states.contains(MaterialState.hovered) ? 0.6 : 0.4);
+        }),
+      ),
       textTheme:
           GoogleFonts.interTextTheme(ThemeData.dark().textTheme).copyWith(
         displayLarge:
@@ -260,6 +320,23 @@ class AppTheme {
             AppTextStyles.label.copyWith(color: AppColors.textSecondary),
         labelSmall:
             AppTextStyles.caption.copyWith(color: AppColors.textTertiary),
+      ),
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: AppColors.backgroundSecondary,
+        indicatorColor: AppColors.primary.withOpacity(0.12),
+        labelTextStyle: const MaterialStatePropertyAll(AppTextStyles.caption),
+        elevation: 0,
+      ),
+      navigationRailTheme: NavigationRailThemeData(
+        backgroundColor: AppColors.backgroundSecondary,
+        indicatorColor: AppColors.primary.withOpacity(0.12),
+        selectedIconTheme: const IconThemeData(color: AppColors.primary),
+        selectedLabelTextStyle: AppTextStyles.caption
+            .copyWith(color: AppColors.primary, fontWeight: FontWeight.w600),
+        unselectedIconTheme: const IconThemeData(color: AppColors.textTertiary),
+        unselectedLabelTextStyle:
+            AppTextStyles.caption.copyWith(color: AppColors.textTertiary),
+        elevation: 0,
       ),
       appBarTheme: const AppBarTheme(
         elevation: 0,
@@ -374,4 +451,15 @@ class AppTheme {
       ),
     );
   }
+}
+
+class AppScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        PointerDeviceKind.stylus,
+        PointerDeviceKind.trackpad,
+        PointerDeviceKind.unknown,
+      };
 }

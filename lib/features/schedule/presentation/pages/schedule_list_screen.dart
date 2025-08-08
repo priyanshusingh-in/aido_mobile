@@ -71,145 +71,158 @@ class _ScheduleListScreenState extends State<ScheduleListScreen> {
         },
         child: BlocBuilder<ScheduleBloc, ScheduleState>(
           builder: (context, state) {
-          if (state is ScheduleLoading) {
-            return const Center(
-              child: CircularProgressIndicator(
-                color: AppColors.primary,
-              ),
-            );
-          } else if (state is SchedulesLoaded) {
-            var schedules = state.schedules;
-            if (schedules.isEmpty) {
-              return _buildEmptyState();
-            }
-            return RefreshIndicator(
-              onRefresh: () async {
-                _loadSchedules();
-              },
-              child: ListView.builder(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                itemCount: schedules.length,
-                itemBuilder: (context, index) {
-                  final schedule = schedules[index];
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: ScheduleCard(
-                      schedule: schedule,
-                      onTap: () {
-                        // TODO: Navigate to schedule detail
+            if (state is ScheduleLoading) {
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: AppColors.primary,
+                ),
+              );
+            } else if (state is SchedulesLoaded) {
+              var schedules = state.schedules;
+              if (schedules.isEmpty) {
+                return _buildEmptyState();
+              }
+              return Align(
+                alignment: Alignment.topCenter,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1000),
+                  child: Scrollbar(
+                    child: RefreshIndicator(
+                      onRefresh: () async {
+                        _loadSchedules();
                       },
-                      onEdit: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => EditScheduleScreen(
+                      child: ListView.builder(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 16),
+                        itemCount: schedules.length,
+                        itemBuilder: (context, index) {
+                          final schedule = schedules[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: ScheduleCard(
                               schedule: schedule,
-                            ),
-                          ),
-                        );
-                      },
-                      onDelete: () async {
-                        // Show confirmation dialog
-                        final shouldDelete = await showDialog<bool>(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Delete Schedule'),
-                              content: Text(
-                                'Are you sure you want to delete "${schedule.title}"? This action cannot be undone.',
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(false),
-                                  child: const Text('Cancel'),
-                                ),
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(true),
-                                  style: TextButton.styleFrom(
-                                    foregroundColor: AppColors.error,
+                              onTap: () {
+                                // TODO: Navigate to schedule detail
+                              },
+                              onEdit: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => EditScheduleScreen(
+                                      schedule: schedule,
+                                    ),
                                   ),
-                                  child: const Text('Delete'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-
-                        if (shouldDelete == true && schedule.id != null) {
-                          final authState = context.read<AuthBloc>().state;
-                          if (authState is AuthAuthenticated) {
-                            final tokenResult =
-                                await getIt<AuthRepository>().getAuthToken();
-                            tokenResult.fold(
-                              (failure) => null,
-                              (token) {
-                                if (token != null) {
-                                  context.read<ScheduleBloc>().add(
-                                        DeleteScheduleRequested(
-                                          id: schedule.id!,
-                                          authToken: 'Bearer $token',
+                                );
+                              },
+                              onDelete: () async {
+                                // Show confirmation dialog
+                                final shouldDelete = await showDialog<bool>(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text('Delete Schedule'),
+                                      content: Text(
+                                        'Are you sure you want to delete "${schedule.title}"? This action cannot be undone.',
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(false),
+                                          child: const Text('Cancel'),
                                         ),
-                                      );
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(true),
+                                          style: TextButton.styleFrom(
+                                            foregroundColor: AppColors.error,
+                                          ),
+                                          child: const Text('Delete'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+
+                                if (shouldDelete == true &&
+                                    schedule.id != null) {
+                                  final authState =
+                                      context.read<AuthBloc>().state;
+                                  if (authState is AuthAuthenticated) {
+                                    final tokenResult =
+                                        await getIt<AuthRepository>()
+                                            .getAuthToken();
+                                    tokenResult.fold(
+                                      (failure) => null,
+                                      (token) {
+                                        if (token != null) {
+                                          context.read<ScheduleBloc>().add(
+                                                DeleteScheduleRequested(
+                                                  id: schedule.id!,
+                                                  authToken: 'Bearer $token',
+                                                ),
+                                              );
+                                        }
+                                      },
+                                    );
+                                  }
                                 }
                               },
-                            );
-                          }
-                        }
-                      },
-                    ),
-                  );
-                },
-              ),
-            );
-          } else if (state is ScheduleError) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.lg),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(AppSpacing.lg),
-                      decoration: BoxDecoration(
-                        color: AppColors.error.withOpacity(0.1),
-                        borderRadius:
-                            BorderRadius.circular(AppBorderRadius.round),
-                      ),
-                      child: Icon(
-                        Icons.error_outline,
-                        size: AppSizes.iconXLarge,
-                        color: AppColors.error,
+                            ),
+                          );
+                        },
                       ),
                     ),
-                    const SizedBox(height: AppSpacing.lg),
-                    Text(
-                      'Error loading schedules',
-                      style: AppTextStyles.heading2.copyWith(
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    Text(
-                      state.message,
-                      style: AppTextStyles.bodyMedium.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: AppSpacing.lg),
-                    ElevatedButton(
-                      onPressed: _loadSchedules,
-                      child: const Text('Retry'),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            );
-          }
-          return _buildEmptyState();
-        },
+              );
+            } else if (state is ScheduleError) {
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSpacing.lg),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(AppSpacing.lg),
+                        decoration: BoxDecoration(
+                          color: AppColors.error.withOpacity(0.1),
+                          borderRadius:
+                              BorderRadius.circular(AppBorderRadius.round),
+                        ),
+                        child: Icon(
+                          Icons.error_outline,
+                          size: AppSizes.iconXLarge,
+                          color: AppColors.error,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
+                      Text(
+                        'Error loading schedules',
+                        style: AppTextStyles.heading2.copyWith(
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      Text(
+                        state.message,
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
+                      ElevatedButton(
+                        onPressed: _loadSchedules,
+                        child: const Text('Retry'),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
+            return _buildEmptyState();
+          },
+        ),
       ),
-    ),
       floatingActionButton: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(AppBorderRadius.large),
