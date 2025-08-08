@@ -29,50 +29,59 @@ class SettingsScreen extends StatelessWidget {
               ),
             );
           } else if (state is SettingsLoaded) {
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildUserSection(context),
-                  const SizedBox(height: 24),
-                  SettingsSection(
-                    title: 'Appearance',
-                    children: [
-                      SettingsTile(
-                        title: 'Theme',
-                        subtitle: _getThemeLabel(state.settings.themeMode),
-                        leading: const Icon(Icons.palette_outlined),
-                        onTap: () =>
-                            _showThemeDialog(context, state.settings.themeMode),
-                      ),
-                    ],
+            return Align(
+              alignment: Alignment.topCenter,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1000),
+                child: Scrollbar(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildUserSection(context),
+                        const SizedBox(height: 24),
+                        SettingsSection(
+                          title: 'Appearance',
+                          children: [
+                            SettingsTile(
+                              title: 'Theme',
+                              subtitle:
+                                  _getThemeLabel(state.settings.themeMode),
+                              leading: const Icon(Icons.palette_outlined),
+                              onTap: () => _showThemeDialog(
+                                  context, state.settings.themeMode),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 24),
+                        SettingsSection(
+                          title: 'Account',
+                          children: [
+                            SettingsTile(
+                              title: 'Sign Out',
+                              subtitle: 'Sign out of your account',
+                              leading: const Icon(Icons.logout),
+                              onTap: () => _showSignOutDialog(context),
+                              textColor: AppColors.error,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 24),
+                        SettingsSection(
+                          title: 'About',
+                          children: [
+                            const SettingsTile(
+                              title: 'Version',
+                              subtitle: '1.0.0',
+                              leading: Icon(Icons.info_outline),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 24),
-                  SettingsSection(
-                    title: 'Account',
-                    children: [
-                      SettingsTile(
-                        title: 'Sign Out',
-                        subtitle: 'Sign out of your account',
-                        leading: const Icon(Icons.logout),
-                        onTap: () => _showSignOutDialog(context),
-                        textColor: AppColors.error,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  SettingsSection(
-                    title: 'About',
-                    children: [
-                      const SettingsTile(
-                        title: 'Version',
-                        subtitle: '1.0.0',
-                        leading: Icon(Icons.info_outline),
-                      ),
-                    ],
-                  ),
-                ],
+                ),
               ),
             );
           } else if (state is SettingsError) {

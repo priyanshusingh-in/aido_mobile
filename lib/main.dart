@@ -87,6 +87,15 @@ class AppTheme {
       scaffoldBackgroundColor: AppColors.background,
       cardColor: AppColors.cardBackground,
       dividerColor: AppColors.divider,
+      dialogTheme: DialogThemeData(
+        backgroundColor: AppColors.backgroundSecondary,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppBorderRadius.large),
+        ),
+        titleTextStyle: AppTextStyles.heading2,
+        contentTextStyle: AppTextStyles.bodyMedium,
+      ),
       snackBarTheme: const SnackBarThemeData(
         backgroundColor: AppColors.textPrimary,
         behavior: SnackBarBehavior.floating,
@@ -95,6 +104,30 @@ class AppTheme {
           borderRadius:
               BorderRadius.all(Radius.circular(AppBorderRadius.medium)),
         ),
+      ),
+      chipTheme: ChipThemeData(
+        backgroundColor: AppColors.surface,
+        selectedColor: AppColors.primary.withOpacity(0.1),
+        labelStyle:
+            AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
+        secondaryLabelStyle:
+            AppTextStyles.caption.copyWith(color: AppColors.primary),
+        side: const BorderSide(color: AppColors.borderLight),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppBorderRadius.medium),
+        ),
+      ),
+      tooltipTheme: TooltipThemeData(
+        decoration: BoxDecoration(
+          color: AppColors.textPrimary,
+          borderRadius: BorderRadius.circular(AppBorderRadius.small),
+        ),
+        textStyle: const TextStyle(color: AppColors.textInverse, fontSize: 12),
+      ),
+      textSelectionTheme: const TextSelectionThemeData(
+        cursorColor: AppColors.primary,
+        selectionColor: Color(0x332563EB),
+        selectionHandleColor: AppColors.primary,
       ),
       scrollbarTheme: ScrollbarThemeData(
         thickness: const MaterialStatePropertyAll(8),
@@ -272,6 +305,15 @@ class AppTheme {
       scaffoldBackgroundColor: AppColors.backgroundSecondary,
       cardColor: AppColors.cardBackground,
       dividerColor: AppColors.divider,
+      dialogTheme: DialogThemeData(
+        backgroundColor: AppColors.backgroundSecondary,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppBorderRadius.large),
+        ),
+        titleTextStyle: AppTextStyles.heading2,
+        contentTextStyle: AppTextStyles.bodyMedium,
+      ),
       snackBarTheme: const SnackBarThemeData(
         backgroundColor: AppColors.textPrimary,
         behavior: SnackBarBehavior.floating,
@@ -280,6 +322,30 @@ class AppTheme {
           borderRadius:
               BorderRadius.all(Radius.circular(AppBorderRadius.medium)),
         ),
+      ),
+      chipTheme: ChipThemeData(
+        backgroundColor: AppColors.surface,
+        selectedColor: AppColors.primary.withOpacity(0.1),
+        labelStyle:
+            AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
+        secondaryLabelStyle:
+            AppTextStyles.caption.copyWith(color: AppColors.primary),
+        side: const BorderSide(color: AppColors.borderLight),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppBorderRadius.medium),
+        ),
+      ),
+      tooltipTheme: TooltipThemeData(
+        decoration: BoxDecoration(
+          color: AppColors.textPrimary,
+          borderRadius: BorderRadius.circular(AppBorderRadius.small),
+        ),
+        textStyle: const TextStyle(color: AppColors.textInverse, fontSize: 12),
+      ),
+      textSelectionTheme: const TextSelectionThemeData(
+        cursorColor: AppColors.primary,
+        selectionColor: Color(0x332563EB),
+        selectionHandleColor: AppColors.primary,
       ),
       scrollbarTheme: ScrollbarThemeData(
         thickness: const MaterialStatePropertyAll(8),

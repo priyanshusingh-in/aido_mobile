@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/injection_container.dart';
@@ -150,56 +151,91 @@ class _AIPromptInputState extends State<AIPromptInput> {
               ],
             ),
             const SizedBox(height: AppSpacing.lg),
-            Container(
-              decoration: BoxDecoration(
-                color: AppColors.inputBackground,
-                borderRadius: BorderRadius.circular(AppBorderRadius.medium),
-                border: Border.all(color: AppColors.inputBorder, width: 1),
-              ),
-              child: TextField(
-                controller: _controller,
-                focusNode: _focusNode,
-                maxLines: 3,
-                minLines: 1,
-                style: AppTextStyles.bodyMedium.copyWith(
-                  color: AppColors.textPrimary,
-                ),
-                decoration: InputDecoration(
-                  hintText:
-                      'e.g., "Meeting with John tomorrow at 3 PM" or "remind me to call mom in 2 minutes"',
-                  hintStyle: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.textTertiary,
+            Shortcuts(
+              shortcuts: <ShortcutActivator, Intent>{
+                const SingleActivator(LogicalKeyboardKey.enter, control: true):
+                    const ActivateIntent(),
+                const SingleActivator(LogicalKeyboardKey.enter, meta: true):
+                    const ActivateIntent(),
+              },
+              child: Actions(
+                actions: <Type, Action<Intent>>{
+                  ActivateIntent: CallbackAction<ActivateIntent>(
+                    onInvoke: (intent) {
+                      _handleSubmit();
+                      return null;
+                    },
                   ),
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.all(AppSpacing.md),
-                  suffixIcon: _controller.text.isNotEmpty
-                      ? Container(
-                          margin: const EdgeInsets.all(AppSpacing.sm),
-                          decoration: BoxDecoration(
-                            color: AppColors.primary,
-                            borderRadius:
-                                BorderRadius.circular(AppBorderRadius.medium),
-                            boxShadow: AppShadows.button,
-                          ),
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.send,
-                              color: AppColors.textInverse,
-                              size: 18,
-                            ),
-                            onPressed: _handleSubmit,
-                            style: IconButton.styleFrom(
-                              padding: const EdgeInsets.all(AppSpacing.sm),
-                            ),
-                          ),
-                        )
-                      : null,
-                ),
-                onChanged: (value) {
-                  setState(() {});
                 },
-                onSubmitted: (_) => _handleSubmit(),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.inputBackground,
+                    borderRadius: BorderRadius.circular(AppBorderRadius.medium),
+                    border: Border.all(color: AppColors.inputBorder, width: 1),
+                  ),
+                  child: TextField(
+                    controller: _controller,
+                    focusNode: _focusNode,
+                    maxLines: 3,
+                    minLines: 1,
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      color: AppColors.textPrimary,
+                    ),
+                    decoration: InputDecoration(
+                      hintText:
+                          'e.g., "Meeting with John tomorrow at 3 PM" or "remind me to call mom in 2 minutes"',
+                      hintStyle: AppTextStyles.bodyMedium.copyWith(
+                        color: AppColors.textTertiary,
+                      ),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.all(AppSpacing.md),
+                      suffixIcon: _controller.text.isNotEmpty
+                          ? Container(
+                              margin: const EdgeInsets.all(AppSpacing.sm),
+                              decoration: BoxDecoration(
+                                color: AppColors.primary,
+                                borderRadius: BorderRadius.circular(
+                                    AppBorderRadius.medium),
+                                boxShadow: AppShadows.button,
+                              ),
+                              child: IconButton(
+                                icon: const Icon(
+                                  Icons.send,
+                                  color: AppColors.textInverse,
+                                  size: 18,
+                                ),
+                                tooltip: 'Send (Ctrl/Cmd + Enter)',
+                                onPressed: _handleSubmit,
+                                style: IconButton.styleFrom(
+                                  padding: const EdgeInsets.all(AppSpacing.sm),
+                                ),
+                              ),
+                            )
+                          : null,
+                    ),
+                    onChanged: (value) {
+                      setState(() {});
+                    },
+                    onSubmitted: (_) => _handleSubmit(),
+                  ),
+                ),
               ),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Ctrl/Cmd + Enter to submit',
+                  style: AppTextStyles.caption
+                      .copyWith(color: AppColors.textTertiary),
+                ),
+                Text(
+                  'Shift + Enter for new line',
+                  style: AppTextStyles.caption
+                      .copyWith(color: AppColors.textTertiary),
+                ),
+              ],
             ),
           ],
         ),

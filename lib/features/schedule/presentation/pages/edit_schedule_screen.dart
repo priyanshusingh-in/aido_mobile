@@ -221,396 +221,419 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
         builder: (context, state) {
           return Stack(
             children: [
-              SingleChildScrollView(
-                padding: const EdgeInsets.all(AppSpacing.lg),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Type Selection
-                      Text(
-                        'Type',
-                        style: AppTextStyles.heading4.copyWith(
-                          color: AppColors.textPrimary,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.md),
-                        decoration: BoxDecoration(
-                          color: AppColors.surface,
-                          borderRadius:
-                              BorderRadius.circular(AppBorderRadius.medium),
-                          border: Border.all(color: AppColors.borderLight),
-                        ),
-                        child: DropdownButtonFormField<ScheduleType>(
-                          value: _selectedType,
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            contentPadding:
-                                EdgeInsets.symmetric(vertical: AppSpacing.md),
-                          ),
-                          items: ScheduleType.values.map((type) {
-                            return DropdownMenuItem(
-                              value: type,
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    _getTypeIcon(type),
-                                    color: _getTypeColor(type),
-                                    size: AppSizes.iconSmall,
-                                  ),
-                                  const SizedBox(width: AppSpacing.sm),
-                                  Text(_getTypeName(type)),
-                                ],
+              Align(
+                alignment: Alignment.topCenter,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1000),
+                  child: Scrollbar(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(AppSpacing.lg),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Type Selection
+                            Text(
+                              'Type',
+                              style: AppTextStyles.heading4.copyWith(
+                                color: AppColors.textPrimary,
+                                fontWeight: FontWeight.w600,
                               ),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            if (value != null) {
-                              setState(() {
-                                _selectedType = value;
-                              });
-                            }
-                          },
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.lg),
-
-                      // Title
-                      Text(
-                        'Title',
-                        style: AppTextStyles.heading4.copyWith(
-                          color: AppColors.textPrimary,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                      TextFormField(
-                        controller: _titleController,
-                        decoration: InputDecoration(
-                          hintText: 'Enter schedule title',
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.circular(AppBorderRadius.medium),
-                          ),
-                          filled: true,
-                          fillColor: AppColors.surface,
-                        ),
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'Title is required';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: AppSpacing.lg),
-
-                      // Description
-                      Text(
-                        'Description',
-                        style: AppTextStyles.heading4.copyWith(
-                          color: AppColors.textPrimary,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                      TextFormField(
-                        controller: _descriptionController,
-                        maxLines: 3,
-                        decoration: InputDecoration(
-                          hintText: 'Enter description (optional)',
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.circular(AppBorderRadius.medium),
-                          ),
-                          filled: true,
-                          fillColor: AppColors.surface,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.lg),
-
-                      // Date and Time Row
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Date',
-                                  style: AppTextStyles.heading4.copyWith(
-                                    color: AppColors.textPrimary,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                            ),
+                            const SizedBox(height: AppSpacing.sm),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: AppSpacing.md),
+                              decoration: BoxDecoration(
+                                color: AppColors.surface,
+                                borderRadius: BorderRadius.circular(
+                                    AppBorderRadius.medium),
+                                border:
+                                    Border.all(color: AppColors.borderLight),
+                              ),
+                              child: DropdownButtonFormField<ScheduleType>(
+                                value: _selectedType,
+                                decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: AppSpacing.md),
                                 ),
-                                const SizedBox(height: AppSpacing.sm),
-                                GestureDetector(
-                                  onTap: () => _selectDate(context),
-                                  child: TextFormField(
-                                    controller: _dateController,
-                                    enabled: false,
-                                    decoration: InputDecoration(
-                                      suffixIcon:
-                                          const Icon(Icons.calendar_today),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            AppBorderRadius.medium),
+                                items: ScheduleType.values.map((type) {
+                                  return DropdownMenuItem(
+                                    value: type,
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          _getTypeIcon(type),
+                                          color: _getTypeColor(type),
+                                          size: AppSizes.iconSmall,
+                                        ),
+                                        const SizedBox(width: AppSpacing.sm),
+                                        Text(_getTypeName(type)),
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  if (value != null) {
+                                    setState(() {
+                                      _selectedType = value;
+                                    });
+                                  }
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: AppSpacing.lg),
+
+                            // Title
+                            Text(
+                              'Title',
+                              style: AppTextStyles.heading4.copyWith(
+                                color: AppColors.textPrimary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: AppSpacing.sm),
+                            TextFormField(
+                              controller: _titleController,
+                              decoration: InputDecoration(
+                                hintText: 'Enter schedule title',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      AppBorderRadius.medium),
+                                ),
+                                filled: true,
+                                fillColor: AppColors.surface,
+                              ),
+                              validator: (value) {
+                                if (value == null || value.trim().isEmpty) {
+                                  return 'Title is required';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: AppSpacing.lg),
+
+                            // Description
+                            Text(
+                              'Description',
+                              style: AppTextStyles.heading4.copyWith(
+                                color: AppColors.textPrimary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: AppSpacing.sm),
+                            TextFormField(
+                              controller: _descriptionController,
+                              maxLines: 3,
+                              decoration: InputDecoration(
+                                hintText: 'Enter description (optional)',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      AppBorderRadius.medium),
+                                ),
+                                filled: true,
+                                fillColor: AppColors.surface,
+                              ),
+                            ),
+                            const SizedBox(height: AppSpacing.lg),
+
+                            // Date and Time Row
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Date',
+                                        style: AppTextStyles.heading4.copyWith(
+                                          color: AppColors.textPrimary,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
-                                      filled: true,
-                                      fillColor: AppColors.surface,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: AppSpacing.md),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Time',
-                                  style: AppTextStyles.heading4.copyWith(
-                                    color: AppColors.textPrimary,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                const SizedBox(height: AppSpacing.sm),
-                                GestureDetector(
-                                  onTap: () => _selectTime(context),
-                                  child: TextFormField(
-                                    controller: _timeController,
-                                    enabled: false,
-                                    decoration: InputDecoration(
-                                      suffixIcon: const Icon(Icons.access_time),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            AppBorderRadius.medium),
+                                      const SizedBox(height: AppSpacing.sm),
+                                      GestureDetector(
+                                        onTap: () => _selectDate(context),
+                                        child: TextFormField(
+                                          controller: _dateController,
+                                          enabled: false,
+                                          decoration: InputDecoration(
+                                            suffixIcon: const Icon(
+                                                Icons.calendar_today),
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      AppBorderRadius.medium),
+                                            ),
+                                            filled: true,
+                                            fillColor: AppColors.surface,
+                                          ),
+                                        ),
                                       ),
-                                      filled: true,
-                                      fillColor: AppColors.surface,
-                                    ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: AppSpacing.md),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Time',
+                                        style: AppTextStyles.heading4.copyWith(
+                                          color: AppColors.textPrimary,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      const SizedBox(height: AppSpacing.sm),
+                                      GestureDetector(
+                                        onTap: () => _selectTime(context),
+                                        child: TextFormField(
+                                          controller: _timeController,
+                                          enabled: false,
+                                          decoration: InputDecoration(
+                                            suffixIcon:
+                                                const Icon(Icons.access_time),
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      AppBorderRadius.medium),
+                                            ),
+                                            filled: true,
+                                            fillColor: AppColors.surface,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: AppSpacing.lg),
+                            const SizedBox(height: AppSpacing.lg),
 
-                      // Duration and Priority Row
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            // Duration and Priority Row
+                            Row(
                               children: [
-                                Text(
-                                  'Duration (minutes)',
-                                  style: AppTextStyles.heading4.copyWith(
-                                    color: AppColors.textPrimary,
-                                    fontWeight: FontWeight.w600,
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Duration (minutes)',
+                                        style: AppTextStyles.heading4.copyWith(
+                                          color: AppColors.textPrimary,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      const SizedBox(height: AppSpacing.sm),
+                                      TextFormField(
+                                        controller: _durationController,
+                                        keyboardType: TextInputType.number,
+                                        decoration: InputDecoration(
+                                          hintText: '60',
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                AppBorderRadius.medium),
+                                          ),
+                                          filled: true,
+                                          fillColor: AppColors.surface,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                const SizedBox(height: AppSpacing.sm),
-                                TextFormField(
-                                  controller: _durationController,
-                                  keyboardType: TextInputType.number,
-                                  decoration: InputDecoration(
-                                    hintText: '60',
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          AppBorderRadius.medium),
-                                    ),
-                                    filled: true,
-                                    fillColor: AppColors.surface,
+                                const SizedBox(width: AppSpacing.md),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Priority',
+                                        style: AppTextStyles.heading4.copyWith(
+                                          color: AppColors.textPrimary,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      const SizedBox(height: AppSpacing.sm),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: AppSpacing.md),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.surface,
+                                          borderRadius: BorderRadius.circular(
+                                              AppBorderRadius.medium),
+                                          border: Border.all(
+                                              color: AppColors.borderLight),
+                                        ),
+                                        child:
+                                            DropdownButtonFormField<Priority>(
+                                          value: _selectedPriority,
+                                          decoration: const InputDecoration(
+                                            border: InputBorder.none,
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: AppSpacing.md),
+                                          ),
+                                          items:
+                                              Priority.values.map((priority) {
+                                            return DropdownMenuItem(
+                                              value: priority,
+                                              child: Row(
+                                                children: [
+                                                  Container(
+                                                    width: 12,
+                                                    height: 12,
+                                                    decoration: BoxDecoration(
+                                                      color: _getPriorityColor(
+                                                          priority),
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                      width: AppSpacing.sm),
+                                                  Text(_getPriorityName(
+                                                      priority)),
+                                                ],
+                                              ),
+                                            );
+                                          }).toList(),
+                                          onChanged: (value) {
+                                            if (value != null) {
+                                              setState(() {
+                                                _selectedPriority = value;
+                                              });
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-                          const SizedBox(width: AppSpacing.md),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Priority',
-                                  style: AppTextStyles.heading4.copyWith(
-                                    color: AppColors.textPrimary,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                            const SizedBox(height: AppSpacing.lg),
+
+                            // Location
+                            Text(
+                              'Location',
+                              style: AppTextStyles.heading4.copyWith(
+                                color: AppColors.textPrimary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: AppSpacing.sm),
+                            TextFormField(
+                              controller: _locationController,
+                              decoration: InputDecoration(
+                                hintText: 'Enter location (optional)',
+                                prefixIcon:
+                                    const Icon(Icons.location_on_outlined),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      AppBorderRadius.medium),
                                 ),
-                                const SizedBox(height: AppSpacing.sm),
-                                Container(
+                                filled: true,
+                                fillColor: AppColors.surface,
+                              ),
+                            ),
+                            const SizedBox(height: AppSpacing.lg),
+
+                            // Participants
+                            Text(
+                              'Participants',
+                              style: AppTextStyles.heading4.copyWith(
+                                color: AppColors.textPrimary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: AppSpacing.sm),
+                            TextFormField(
+                              controller: _participantsController,
+                              decoration: InputDecoration(
+                                hintText:
+                                    'Enter participants separated by commas (optional)',
+                                prefixIcon: const Icon(Icons.people_outline),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      AppBorderRadius.medium),
+                                ),
+                                filled: true,
+                                fillColor: AppColors.surface,
+                              ),
+                            ),
+                            const SizedBox(height: AppSpacing.lg),
+
+                            // Category
+                            Text(
+                              'Category',
+                              style: AppTextStyles.heading4.copyWith(
+                                color: AppColors.textPrimary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: AppSpacing.sm),
+                            TextFormField(
+                              controller: _categoryController,
+                              decoration: InputDecoration(
+                                hintText: 'Enter category (optional)',
+                                prefixIcon: const Icon(Icons.category_outlined),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      AppBorderRadius.medium),
+                                ),
+                                filled: true,
+                                fillColor: AppColors.surface,
+                              ),
+                            ),
+                            const SizedBox(height: AppSpacing.xl),
+
+                            // Save Button
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: state is ScheduleUpdating
+                                    ? null
+                                    : _saveSchedule,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primary,
+                                  foregroundColor: AppColors.textInverse,
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: AppSpacing.md),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.surface,
+                                      vertical: AppSpacing.lg),
+                                  shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(
                                         AppBorderRadius.medium),
-                                    border: Border.all(
-                                        color: AppColors.borderLight),
                                   ),
-                                  child: DropdownButtonFormField<Priority>(
-                                    value: _selectedPriority,
-                                    decoration: const InputDecoration(
-                                      border: InputBorder.none,
-                                      contentPadding: EdgeInsets.symmetric(
-                                          vertical: AppSpacing.md),
-                                    ),
-                                    items: Priority.values.map((priority) {
-                                      return DropdownMenuItem(
-                                        value: priority,
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              width: 12,
-                                              height: 12,
-                                              decoration: BoxDecoration(
-                                                color:
-                                                    _getPriorityColor(priority),
-                                                shape: BoxShape.circle,
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                                width: AppSpacing.sm),
-                                            Text(_getPriorityName(priority)),
-                                          ],
+                                ),
+                                child: state is ScheduleUpdating
+                                    ? const SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                  AppColors.textInverse),
                                         ),
-                                      );
-                                    }).toList(),
-                                    onChanged: (value) {
-                                      if (value != null) {
-                                        setState(() {
-                                          _selectedPriority = value;
-                                        });
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ],
+                                      )
+                                    : const Text(
+                                        'Save Changes',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: AppSpacing.lg),
-
-                      // Location
-                      Text(
-                        'Location',
-                        style: AppTextStyles.heading4.copyWith(
-                          color: AppColors.textPrimary,
-                          fontWeight: FontWeight.w600,
+                          ],
                         ),
                       ),
-                      const SizedBox(height: AppSpacing.sm),
-                      TextFormField(
-                        controller: _locationController,
-                        decoration: InputDecoration(
-                          hintText: 'Enter location (optional)',
-                          prefixIcon: const Icon(Icons.location_on_outlined),
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.circular(AppBorderRadius.medium),
-                          ),
-                          filled: true,
-                          fillColor: AppColors.surface,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.lg),
-
-                      // Participants
-                      Text(
-                        'Participants',
-                        style: AppTextStyles.heading4.copyWith(
-                          color: AppColors.textPrimary,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                      TextFormField(
-                        controller: _participantsController,
-                        decoration: InputDecoration(
-                          hintText:
-                              'Enter participants separated by commas (optional)',
-                          prefixIcon: const Icon(Icons.people_outline),
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.circular(AppBorderRadius.medium),
-                          ),
-                          filled: true,
-                          fillColor: AppColors.surface,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.lg),
-
-                      // Category
-                      Text(
-                        'Category',
-                        style: AppTextStyles.heading4.copyWith(
-                          color: AppColors.textPrimary,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                      TextFormField(
-                        controller: _categoryController,
-                        decoration: InputDecoration(
-                          hintText: 'Enter category (optional)',
-                          prefixIcon: const Icon(Icons.category_outlined),
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.circular(AppBorderRadius.medium),
-                          ),
-                          filled: true,
-                          fillColor: AppColors.surface,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.xl),
-
-                      // Save Button
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed:
-                              state is ScheduleUpdating ? null : _saveSchedule,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary,
-                            foregroundColor: AppColors.textInverse,
-                            padding: const EdgeInsets.symmetric(
-                                vertical: AppSpacing.lg),
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(AppBorderRadius.medium),
-                            ),
-                          ),
-                          child: state is ScheduleUpdating
-                              ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        AppColors.textInverse),
-                                  ),
-                                )
-                              : const Text(
-                                  'Save Changes',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ),
