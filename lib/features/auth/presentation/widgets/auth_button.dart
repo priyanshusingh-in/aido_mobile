@@ -7,6 +7,7 @@ class AuthButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final bool isLoading;
   final bool isOutlined;
+  final IconData? leadingIcon;
 
   const AuthButton({
     super.key,
@@ -14,6 +15,7 @@ class AuthButton extends StatelessWidget {
     this.onPressed,
     this.isLoading = false,
     this.isOutlined = false,
+    this.leadingIcon,
   });
 
   @override
@@ -41,11 +43,21 @@ class AuthButton extends StatelessWidget {
                       AlwaysStoppedAnimation<Color>(AppColors.accentLight),
                 ),
               )
-            : Text(
-                text,
-                style: AppTextStyles.buttonMedium.copyWith(
-                  color: AppColors.accentLight,
-                ),
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (leadingIcon != null) ...[
+                    Icon(leadingIcon, color: AppColors.accentLight),
+                    const SizedBox(width: 8),
+                  ],
+                  Text(
+                    text,
+                    style: AppTextStyles.buttonMedium.copyWith(
+                      color: AppColors.accentLight,
+                    ),
+                  ),
+                ],
               ),
       );
     }
@@ -73,9 +85,24 @@ class AuthButton extends StatelessWidget {
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
               ),
             )
-          : Text(
-              text,
-              style: AppTextStyles.buttonMedium.copyWith(color: Colors.white),
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (leadingIcon != null) ...[
+                  const Icon(Icons.circle,
+                      size: 0), // ensures consistent height
+                ],
+                if (leadingIcon != null) ...[
+                  Icon(leadingIcon, color: Colors.white),
+                  const SizedBox(width: 8),
+                ],
+                Text(
+                  text,
+                  style:
+                      AppTextStyles.buttonMedium.copyWith(color: Colors.white),
+                ),
+              ],
             ),
     );
   }
